@@ -19,7 +19,7 @@ spec:
       emptyDir: {}
   steps:
     - name: collect-logs
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:69cc1f37ab224fb74c872ac01fca70010fcf6627
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools@sha256:2300e736914cc146821bb7012c3c625af0d27dd2b9344d87f4c7f72cefc46a91
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
