@@ -67,8 +67,6 @@ spec:
               key: url
         - name: APP_NAME
           value: $(params.APP_NAME)
-        - name: COMPONENT_NAME
-          value: $(params.COMPONENT_NAME)
         - name: COMPONENTS
           value: $(params.COMPONENTS)
         - name: COMPONENTS_W_RESOURCES
