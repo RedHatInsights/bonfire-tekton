@@ -33,7 +33,7 @@ spec:
       taskRef:
         resolver: git
         params:
-          - name: teardown
+          - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
             value: main
@@ -47,7 +47,7 @@ spec:
       taskRef:
         resolver: git
         params:
-          - name: reserve-namespace
+          - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
             value: main
@@ -66,7 +66,7 @@ spec:
       taskRef:
         resolver: git
         params:
-          - name: deploy-application
+          - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
             value: main
@@ -83,7 +83,7 @@ spec:
       taskRef:
         resolver: git
         params:
-          - name: run-test
+          - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
             value: main
