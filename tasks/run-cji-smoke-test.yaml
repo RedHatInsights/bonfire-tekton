@@ -53,9 +53,6 @@ spec:
       type: string
       description: "true -- whether to run IQE pod with a selenium container, default is false"
       default: "false"
-  results:
-    - name: IQE_POD
-      description: ""
   steps:
     - name: deploy-iqe-cji
       image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:d52ef6a882099d003240fd5664f7f4e0f9c2de65
@@ -100,4 +97,4 @@ spec:
         login.sh
 
         echo "Deploying the IQE CJI smoke test"
-        deploy-iqe-cji.sh "$(params.NS)" "$(params.NS_REQUESTER)" $(results.IQE_POD.path)
+        deploy-iqe-cji.sh "$(params.NS)" "$(params.NS_REQUESTER)"

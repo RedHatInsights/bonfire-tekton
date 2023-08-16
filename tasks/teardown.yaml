@@ -14,9 +14,6 @@ spec:
       type: string
       default: ephemeral-env-provider
       description: "Secret for connecting to ephemeral env provider cluster"
-    - name: IQE_POD
-      type: string
-      description: The name of the IQE Pod
   volumes:
     - name: artifacts
       emptyDir: {}
@@ -49,7 +46,7 @@ spec:
 
         echo "Collecting logs"
         collect-logs.sh "$(params.NS)" /artifacts || :
-        minio-collect.sh "$(params.NS)" "$(params.IQE_POD)" /artifacts
+        minio-collect.sh "$(params.NS)" /artifacts
     - name: release-namespace
       image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:d52ef6a882099d003240fd5664f7f4e0f9c2de65
       env:
