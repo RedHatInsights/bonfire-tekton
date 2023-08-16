@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: run-test
+  name: run-cji-smoke-test
 spec:
   params:
     - name: EPHEMERAL_ENV_PROVIDER_SECRET
@@ -29,6 +29,10 @@ spec:
       type: string
       description: This is the value passed to pytest -k
       default: test_plugin_accessible
+    - name: IQE_REQUIREMENTS
+      type: string
+      description: ""
+      default: ""
     - name: IQE_REQUIREMENTS_PRIORITY
       type: string
       description: ""
@@ -41,12 +45,20 @@ spec:
       type: string
       description: This is the time to wait for smoke test to complete or fail
       default: 30m
+    - name: IQE_ENV
+      type: string
+      description: "something -- value to set for ENV_FOR_DYNACONF, default is \"clowder_smoke\""
+      default: "clowder_smoke"
+    - name: IQE_SELENIUM
+      type: string
+      description: "true -- whether to run IQE pod with a selenium container, default is false"
+      default: "false"
   results:
-    - name: TEST_OUTPUT
+    - name: IQE_POD
       description: ""
   steps:
-    - name: run-test
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools@sha256:2300e736914cc146821bb7012c3c625af0d27dd2b9344d87f4c7f72cefc46a91
+    - name: deploy-iqe-cji
+      image: quay.io/ernesgonzalez33/bonfire:latest
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
@@ -66,10 +78,18 @@ spec:
           value: $(params.IQE_MARKER_EXPRESSION)
         - name: IQE_FILTER_EXPRESSION
           value: $(params.IQE_FILTER_EXPRESSION)
+        - name: IQE_REQUIREMENTS
+          value: $(params.IQE_REQUIREMENTS)
         - name: IQE_REQUIREMENTS_PRIORITY
           value: $(params.IQE_REQUIREMENTS_PRIORITY)
+        - name: IQE_TEST_IMPORTANCE
+          value: $(params.IQE_TEST_IMPORTANCE)
         - name: IQE_CJI_TIMEOUT
           value: $(params.IQE_CJI_TIMEOUT)
+        - name: IQE_ENV
+          value: $(params.IQE_ENV)
+        - name: IQE_SELENIUM
+          value: $(params.IQE_SELENIUM)
         - name: BONFIRE_BOT
           value: "true"
       script: |
@@ -79,6 +99,5 @@ spec:
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
 
-        echo "Running the test"
-        oc_wrapper project "$(params.NS)"
-        oc_wrapper get deployments > "$(results.TEST_OUTPUT.path)"
+        echo "Deploying the IQE CJI smoke test"
+        deploy-iqe-cji.sh "$(params.NS)" "$(params.NS_REQUESTER)" $(results.IQE_POD.path)

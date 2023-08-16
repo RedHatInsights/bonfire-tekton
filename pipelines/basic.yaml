@@ -72,7 +72,7 @@ spec:
             value: main
           - name: pathInRepo
             value: tasks/deploy.yaml
-    - name: run-test
+    - name: run-cji-smoke-test
       params:
         - name: NS
           value: "$(tasks.reserve-namespace.results.NS)"
@@ -88,5 +88,4 @@ spec:
           - name: revision
             value: main
           - name: pathInRepo
-            value: tasks/run-test.yaml
-
+            value: tasks/run-cji-smoke-test.yaml
