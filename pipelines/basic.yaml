@@ -19,10 +19,6 @@ spec:
             ]
           }
         Each "containerImage" in the "components" array is validated.
-  results:
-    - name: TEST_OUTPUT
-      value: "$(tasks.run-test.results.TEST_OUTPUT)"
-      description: ""
   finally:
     - name: teardown
       params:
@@ -30,6 +26,8 @@ spec:
           value: "$(tasks.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "rhtap-$(context.pipelineRun.name)"
+        - name: IQE_POD
+          value: "$(tasks.run-cji-smoke-test.results.IQE_POD"
       taskRef:
         resolver: git
         params:
