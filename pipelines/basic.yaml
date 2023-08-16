@@ -27,7 +27,7 @@ spec:
         - name: NS_REQUESTER
           value: "rhtap-$(context.pipelineRun.name)"
         - name: IQE_POD
-          value: "$(tasks.run-cji-smoke-test.results.IQE_POD"
+          value: "$(tasks.run-cji-smoke-test.results.IQE_POD)"
       taskRef:
         resolver: git
         params:
