@@ -46,3 +46,27 @@ spec:
 
         echo "Collecting logs"
         collect-logs.sh "$(params.NS)" /artifacts
+    - name: release-namespace
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:69cc1f37ab224fb74c872ac01fca70010fcf6627
+      env:
+        - name: OC_LOGIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: token
+        - name: OC_LOGIN_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: url
+        - name: BONFIRE_BOT
+          value: "true"
+      script: |
+        #!/bin/bash
+        set -ex
+        
+        echo "Connecting to the ephemeral namespace cluster"
+        login.sh
+
+        echo "Releasing ephemeral namespace"
+        release-ns.sh "$(params.NS)" "$(params.NS_REQUESTER)"
