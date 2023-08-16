@@ -16,7 +16,7 @@ spec:
       description: ""
   steps:
     - name: reserve-namespace
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:d52ef6a882099d003240fd5664f7f4e0f9c2de65
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:7486ba03d8bb5a7f70bf162407d33ffa90754ac1
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
