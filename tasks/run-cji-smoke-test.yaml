@@ -58,7 +58,7 @@ spec:
       description: ""
   steps:
     - name: deploy-iqe-cji
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:cca9b085eb74c6e49397afd1d84613e255279c41
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:d52ef6a882099d003240fd5664f7f4e0f9c2de65
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
