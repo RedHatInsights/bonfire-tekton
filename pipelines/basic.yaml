@@ -19,6 +19,10 @@ spec:
             ]
           }
         Each "containerImage" in the "components" array is validated.
+  results:
+    - name: ARTIFACTS_URL
+      description: URL for the test's artifacts
+      value: $(tasks.teardown.results.ARTIFACTS_URL)
   finally:
     - name: teardown
       params:
