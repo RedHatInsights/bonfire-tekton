@@ -18,6 +18,8 @@ spec:
       type: string
       default: rh-artifacts-bucket
       description: Secret with connection details to S3
+    - name: ARTIFACTS_KEY
+      description: The name of the artifacts directory to upload to S3
   results:
     - name: ARTIFACTS_URL
   volumes:
@@ -90,9 +92,8 @@ spec:
         set -ex
         
         echo "Copying files to S3"
-        key="$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
-        aws s3 cp --recursive /artifacts "s3://${BUCKET_NAME}/${key}"
-        echo https://${ENDPOINT}/${BUCKET}/${key} $(results.ARTIFACTS_URL.path)
+        aws s3 cp --recursive /artifacts "s3://${BUCKET_NAME}/${params.ARTIFACTS_KEY}"
+        echo https://${ENDPOINT}/${BUCKET}/${params.ARTIFACTS_KEY} $(results.ARTIFACTS_URL.path)
     - name: release-namespace
       image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c07d6f8d4b54c84c0e3ccfeb86dedab732573ad9
       env:

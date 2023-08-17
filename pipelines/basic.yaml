@@ -30,6 +30,8 @@ spec:
           value: "$(tasks.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "rhtap-$(context.pipelineRun.name)"
+        - name: ARTIFACTS_KEY
+          value: "$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
       taskRef:
         resolver: git
         params:
