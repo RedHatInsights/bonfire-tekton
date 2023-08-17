@@ -14,6 +14,13 @@ spec:
       type: string
       default: ephemeral-env-provider
       description: "Secret for connecting to ephemeral env provider cluster"
+    - name: AWS_DEFAULT_REGION
+      type: string
+      default: eu-west-1
+      description: Default AWS region of the S3 bucket
+    - name: BUCKET_NAME
+      type: string
+      description: Name of the S3 bucket to upload the artifacts to
   volumes:
     - name: artifacts
       emptyDir: {}
@@ -71,3 +78,27 @@ spec:
 
         echo "Releasing ephemeral namespace"
         release-ns.sh "$(params.NS)" "$(params.NS_REQUESTER)"
+    - name: upload-artifacts-to-s3
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c07d6f8d4b54c84c0e3ccfeb86dedab732573ad9
+      env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AWS_SECRET)
+              key: access_key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AWS_SECRET)
+              key: secret_access_key
+        - name: AWS_DEFAULT_REGION
+          value: "$(params.AWS_DEFAULT_REGION)"
+      volumeMounts:
+        - name: artifacts
+          mountPath: /artifacts
+      script: |
+        #!/bin/bash
+        set -ex
+        
+        echo "Copying files to S3"
+        aws s3 cp --recursive /artifacts "s3://$(params.BUCKET_NAME)/$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
