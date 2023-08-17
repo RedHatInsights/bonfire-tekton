@@ -53,30 +53,6 @@ spec:
         echo "Collecting logs"
         collect-logs.sh "$(params.NS)" /artifacts || :
         minio-collect.sh "$(params.NS)" /artifacts
-    - name: release-namespace
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c07d6f8d4b54c84c0e3ccfeb86dedab732573ad9
-      env:
-        - name: OC_LOGIN_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
-              key: token
-        - name: OC_LOGIN_SERVER
-          valueFrom:
-            secretKeyRef:
-              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
-              key: url
-        - name: BONFIRE_BOT
-          value: "true"
-      script: |
-        #!/bin/bash
-        set -ex
-        
-        echo "Connecting to the ephemeral namespace cluster"
-        login.sh
-
-        echo "Releasing ephemeral namespace"
-        release-ns.sh "$(params.NS)" "$(params.NS_REQUESTER)"
     - name: upload-artifacts-to-s3
       image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c07d6f8d4b54c84c0e3ccfeb86dedab732573ad9
       env:
@@ -105,6 +81,7 @@ spec:
             secretKeyRef:
               name: $(params.AWS_SECRET)
               key: endpoint
+      onError: continue
       volumeMounts:
         - name: artifacts
           mountPath: /artifacts
@@ -116,3 +93,27 @@ spec:
         key="$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
         aws s3 cp --recursive /artifacts "s3://${BUCKET_NAME}/${key}"
         echo https://${ENDPOINT}/${BUCKET}/${key} $(results.ARTIFACTS_URL.path)
+    - name: release-namespace
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c07d6f8d4b54c84c0e3ccfeb86dedab732573ad9
+      env:
+        - name: OC_LOGIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: token
+        - name: OC_LOGIN_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: url
+        - name: BONFIRE_BOT
+          value: "true"
+      script: |
+        #!/bin/bash
+        set -ex
+        
+        echo "Connecting to the ephemeral namespace cluster"
+        login.sh
+
+        echo "Releasing ephemeral namespace"
+        release-ns.sh "$(params.NS)" "$(params.NS_REQUESTER)"
