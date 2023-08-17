@@ -14,13 +14,10 @@ spec:
       type: string
       default: ephemeral-env-provider
       description: "Secret for connecting to ephemeral env provider cluster"
-    - name: AWS_DEFAULT_REGION
+    - name: AWS_SECRET
       type: string
-      default: eu-west-1
-      description: Default AWS region of the S3 bucket
-    - name: BUCKET_NAME
-      type: string
-      description: Name of the S3 bucket to upload the artifacts to
+      default: rh-artifacts-bucket
+      description: Secret with connection details to S3
   volumes:
     - name: artifacts
       emptyDir: {}
@@ -85,14 +82,22 @@ spec:
           valueFrom:
             secretKeyRef:
               name: $(params.AWS_SECRET)
-              key: access_key
+              key: aws_access_key_id
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
               name: $(params.AWS_SECRET)
-              key: secret_access_key
+              key: aws_secret_access_key
         - name: AWS_DEFAULT_REGION
-          value: "$(params.AWS_DEFAULT_REGION)"
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AWS_SECRET)
+              key: aws_region
+        - name: BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AWS_SECRET)
+              key: bucket
       volumeMounts:
         - name: artifacts
           mountPath: /artifacts
@@ -101,4 +106,4 @@ spec:
         set -ex
         
         echo "Copying files to S3"
-        aws s3 cp --recursive /artifacts "s3://$(params.BUCKET_NAME)/$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
+        aws s3 cp --recursive /artifacts "s3://${BUCKET_NAME}/$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
