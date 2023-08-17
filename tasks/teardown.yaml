@@ -101,4 +101,4 @@ spec:
         set -ex
         
         echo "Copying files to S3"
-        aws s3 cp --recursive /artifacts "s3://$(params.BUCKET_NAME)/artifacts"
+        aws s3 cp --recursive /artifacts "s3://$(params.BUCKET_NAME)/$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
