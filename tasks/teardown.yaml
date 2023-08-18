@@ -93,7 +93,7 @@ spec:
         
         echo "Copying files to S3"
         aws s3 cp --recursive /artifacts "s3://${BUCKET}/$(params.ARTIFACTS_KEY)"
-        url=https://s3.console.aws.amazon.com/s3/buckets/${BUCKET}?region=${AWS_DEFAULT_REGION}&prefix=$(params.ARTIFACTS_KEY)/&showversions=false
+        url="https://s3.console.aws.amazon.com/s3/buckets/${BUCKET}?region=${AWS_DEFAULT_REGION}&prefix=$(params.ARTIFACTS_KEY)/&showversions=false"
         echo -n ${url//'\n'}> "$(results.ARTIFACTS_URL.path)"
 
     - name: release-namespace
