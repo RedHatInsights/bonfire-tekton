@@ -92,7 +92,7 @@ spec:
         set -ex
         
         echo "Copying files to S3"
-        aws s3 cp --recursive /artifacts "s3://${BUCKET_NAME}/$(params.ARTIFACTS_KEY)"
+        aws s3 cp --recursive /artifacts "s3://${BUCKET}/$(params.ARTIFACTS_KEY)"
         echo "https://${ENDPOINT}/${BUCKET}/$(params.ARTIFACTS_KEY)"" $(results.ARTIFACTS_URL.path)
     - name: release-namespace
       image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c0d10e50e85b1e25531b3de9c57fa6b6661e87f3
