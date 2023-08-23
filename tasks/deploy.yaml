@@ -25,17 +25,14 @@ spec:
     - name: APP_NAME
       type: string
       description: name of app-sre "application" folder this component lives in
-      default: ccx-data-pipeline
     - name: COMPONENTS
       type: string
       description: space-separated list of components to load
-      default: insights-content-template-renderer
-      # default: ""
+      default: ""
     - name: COMPONENTS_W_RESOURCES
       type: string
       description: component to keep
-      default: insights-content-template-renderer
-      # default: ""
+      default: ""
   steps:
     - name: deploy-application
       image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c0d10e50e85b1e25531b3de9c57fa6b6661e87f3
