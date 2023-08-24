@@ -26,9 +26,6 @@ metadata:
   namespace: <your-namespace>
 spec:
   application: <name-of-your-rhtap-application>
-  contexts:
-  - description: Application testing
-    name: application
   resolverRef:
     params:
     - name: url

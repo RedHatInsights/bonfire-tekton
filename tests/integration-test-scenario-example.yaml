@@ -7,15 +7,12 @@ metadata:
   namespace: ergonzale-tenant
 spec:
   application: insights-content-template-renderer
-  contexts:
-  - description: Application testing
-    name: application
   resolverRef:
     params:
     - name: url
-      value: https://github.com/ernesgonzalez33/tekton-insights.git
+      value: https://github.com/gbenhaim/tekton-insights.git
     - name: revision
-      value: modify-pipeline-parameters
+      value: main
     - name: pathInRepo
       value: pipelines/basic.yaml
     resolver: git
