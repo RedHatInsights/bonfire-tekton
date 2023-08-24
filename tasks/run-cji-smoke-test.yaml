@@ -16,11 +16,9 @@ spec:
     - name: COMPONENT_NAME
       type: string
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
-      default: insights-content-template-renderer
     - name: IQE_PLUGINS
       type: string
       description: name of the IQE plugin for this app.
-      default: ccx
     - name: IQE_MARKER_EXPRESSION
       type: string
       description: This is the value passed to pytest -m

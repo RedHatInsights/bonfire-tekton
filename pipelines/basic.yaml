@@ -19,6 +19,67 @@ spec:
             ]
           }
         Each "containerImage" in the "components" array is validated.
+    - name: EPHEMERAL_ENV_PROVIDER_SECRET
+      type: string
+      default: ephemeral-env-provider
+      description: "Secret for connecting to ephemeral env provider cluster"
+    - name: APP_INTERFACE_SECRET
+      type: string
+      default: app-interface
+      description: "Secret for connecting to app-interface"
+    - name: APP_NAME
+      type: string
+      description: name of app-sre "application" folder this component lives in
+    - name: COMPONENTS
+      type: string
+      description: space-separated list of components to load
+      default: ""
+    - name: COMPONENTS_W_RESOURCES
+      type: string
+      description: component to keep
+      default: ""
+    - name: AWS_SECRET
+      type: string
+      default: rh-artifacts-bucket
+      description: Secret with connection details to S3
+    - name: COMPONENT_NAME
+      type: string
+      description: name of app-sre "resourceTemplate" in deploy.yaml for this component
+    - name: IQE_PLUGINS
+      type: string
+      description: name of the IQE plugin for this app.
+    - name: IQE_MARKER_EXPRESSION
+      type: string
+      description: This is the value passed to pytest -m
+      default: ""
+    - name: IQE_FILTER_EXPRESSION
+      type: string
+      description: This is the value passed to pytest -k
+      default: test_plugin_accessible
+    - name: IQE_REQUIREMENTS
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_REQUIREMENTS_PRIORITY
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_TEST_IMPORTANCE
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_CJI_TIMEOUT
+      type: string
+      description: This is the time to wait for smoke test to complete or fail
+      default: 30m
+    - name: IQE_ENV
+      type: string
+      description: "something -- value to set for ENV_FOR_DYNACONF, default is \"clowder_smoke\""
+      default: "clowder_smoke"
+    - name: IQE_SELENIUM
+      type: string
+      description: "true -- whether to run IQE pod with a selenium container, default is false"
+      default: "false"  
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -32,6 +93,8 @@ spec:
           value: "rhtap-$(context.pipelineRun.name)"
         - name: ARTIFACTS_KEY
           value: "$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
+        - name: AWS_SECRET
+          value: "$(params.AWS_SECRET)"
       taskRef:
         resolver: git
         params:
@@ -46,6 +109,8 @@ spec:
       params:
         - name: NS_REQUESTER
           value: "rhtap-$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
       taskRef:
         resolver: git
         params:
@@ -63,6 +128,14 @@ spec:
           value: "$(tasks.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "rhtap-$(context.pipelineRun.name)"
+        - name: APP_INTERFACE_SECRET
+          value: "$(params.APP_INTERFACE_SECRET)"
+        - name: APP_NAME
+          value: "$(params.APP_NAME)"
+        - name: COMPONENTS
+          value: "$(params.COMPONENTS)"
+        - name: COMPONENTS_W_RESOURCES
+          value: "$(params.COMPONENTS_W_RESOURCES)"
       runAfter:
         - reserve-namespace
       taskRef:
@@ -80,6 +153,28 @@ spec:
           value: "$(tasks.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "rhtap-$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT_NAME)"
+        - name: IQE_PLUGINS
+          value: "$(params.IQE_PLUGINS)"
+        - name: IQE_MARKER_EXPRESSION
+          value: "$(params.IQE_MARKER_EXPRESSION)"
+        - name: IQE_FILTER_EXPRESSION
+          value: "$(params.IQE_FILTER_EXPRESSION)"
+        - name: IQE_REQUIREMENTS
+          value: "$(params.IQE_REQUIREMENTS)"
+        - name: IQE_REQUIREMENTS_PRIORITY
+          value: "$(params.IQE_REQUIREMENTS_PRIORITY)"
+        - name: IQE_TEST_IMPORTANCE
+          value: "$(params.IQE_TEST_IMPORTANCE)"
+        - name: IQE_CJI_TIMEOUT
+          value: "$(params.IQE_CJI_TIMEOUT)"
+        - name: IQE_ENV
+          value: "$(params.IQE_ENV)"
+        - name: IQE_SELENIUM
+          value: "$(params.IQE_SELENIUM)"
       runAfter:
         - deploy-application
       taskRef:
