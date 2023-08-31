@@ -69,20 +69,9 @@ spec:
               name: $(params.AWS_SECRET)
               key: aws_secret_access_key
         - name: AWS_DEFAULT_REGION
-          valueFrom:
-            secretKeyRef:
-              name: $(params.AWS_SECRET)
-              key: aws_region
+          value: us-east-1
         - name: BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: $(params.AWS_SECRET)
-              key: bucket
-        - name: ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: $(params.AWS_SECRET)
-              key: endpoint
+          value: rh-artifacts-bucket
       onError: continue
       volumeMounts:
         - name: artifacts
