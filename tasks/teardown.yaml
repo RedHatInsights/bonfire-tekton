@@ -27,7 +27,7 @@ spec:
       emptyDir: {}
   steps:
     - name: collect-logs
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c0d10e50e85b1e25531b3de9c57fa6b6661e87f3
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:acef21364ecba2c144fc12dc80742553dd05c940
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
@@ -56,7 +56,7 @@ spec:
         collect-logs.sh "$(params.NS)" /artifacts || :
         minio-collect.sh "$(params.NS)" /artifacts
     - name: upload-artifacts-to-s3
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c0d10e50e85b1e25531b3de9c57fa6b6661e87f3
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:acef21364ecba2c144fc12dc80742553dd05c940
       env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
@@ -86,7 +86,7 @@ spec:
         echo -n ${url//'\n'}> "$(results.ARTIFACTS_URL.path)"
 
     - name: release-namespace
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c0d10e50e85b1e25531b3de9c57fa6b6661e87f3
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:acef21364ecba2c144fc12dc80742553dd05c940
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:

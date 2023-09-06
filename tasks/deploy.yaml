@@ -35,7 +35,7 @@ spec:
       default: ""
   steps:
     - name: deploy-application
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c0d10e50e85b1e25531b3de9c57fa6b6661e87f3
+      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:acef21364ecba2c144fc12dc80742553dd05c940
       env:
         - name: APP_INTERFACE_USERNAME
           valueFrom:
