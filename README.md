@@ -10,6 +10,7 @@ For more information about how tests are currently handled, see this [repo](http
 
 * Access to RHTAP. Join the wailist [here](https://console.redhat.com/preview/hac/application-pipeline) and ask for access in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) slack channel.
 * Application in RHTAP already created. You can follow the instructions in the RHTAP [docs](https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/getting-started/get-started/#creating-your-first-application).
+> **IMPORTANT:** The name of the RHTAP Component must be the same name of the `COMPONENT_NAME` parameter in the Integration Test Scenario below.
 * Access to RHTAP using the CLI. Please follow these [instructions](https://docs.google.com/document/d/1hFvQDH1H6MGNqTGfcZpyl2h8OIaynP8sokZohCS0Su0/edit#heading=h.olhho0rpp8t5).
 
 ### Create Integration Test Scenario
@@ -65,3 +66,24 @@ spec:
 ```
 
 > **NOTE:** You can fork the pipeline from https://github.com/gbenhaim/tekton-insights in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
+
+### Add the Integration Test Scenario to your application
+
+To add the Integration Test Scenario to RHTAP, you need to follow these next steps:
+
+1. Fork the tenants-config [repo](https://github.com/redhat-appstudio/tenants-config.git)
+2. In case there is still not a directory for your tenant you will need to create one under the directory `cluster/<cluster-of-your-tenant>/tenants/<your-workspace-name>-tenant`.
+3. Create your Integration Test Scenario in that directory and add the following `kustomization.yaml` file:
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - <your-test-integration-scenario-filename>.yaml
+  - ../../../../lib/consoledot-test-pipeline
+namespace: <your-workspace-name>-tenant
+```
+4. Run the `build-manifests.sh`.
+5. Commit your directory and the `auto-generated` directory.
+6. Create a PR and ask for approval in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
+
+After the approval and merge of the PR, your integration test should be available in your RHTAP workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
