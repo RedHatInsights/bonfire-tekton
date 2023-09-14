@@ -55,7 +55,7 @@ spec:
     - name: IQE_FILTER_EXPRESSION
       type: string
       description: This is the value passed to pytest -k
-      default: test_plugin_accessible
+      default: ""
     - name: IQE_REQUIREMENTS
       type: string
       description: ""
