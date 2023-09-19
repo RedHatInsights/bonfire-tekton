@@ -9,7 +9,7 @@ For more information about how tests are currently handled, see this [repo](http
 ### Prerequisites
 
 * Access to RHTAP. Join the wailist [here](https://console.redhat.com/preview/hac/application-pipeline) and ask for access in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) slack channel.
-* Application in RHTAP already created. You can follow the instructions in the RHTAP [docs](https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/getting-started/get-started/#creating-your-first-application).
+* Application in RHTAP already created. You can follow the instructions in the RHTAP [docs](https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/getting-started/get-started/#creating-your-first-application). Access RHTAP [here](https://console.redhat.com/preview/hac/application-pipeline).
 > **IMPORTANT:** The name of the RHTAP Component must be the same name of the `COMPONENT_NAME` parameter in the Integration Test Scenario below.
 * Kustomize installed in your computer. Follow the instalations [intructions](https://kubectl.docs.kubernetes.io/installation/kustomize/).
 
@@ -18,8 +18,9 @@ For more information about how tests are currently handled, see this [repo](http
 To add the Integration Test Scenario to RHTAP, you need to follow these next steps:
 
 1. Fork the tenants-config [repo](https://github.com/redhat-appstudio/tenants-config.git)
-2. In case there is still not a directory for your tenant you will need to create one under the directory `cluster/stone-prd-rh01/tenants/<your-workspace-name>-tenant`.
-3. Create your Integration Test Scenario in that directory, using the following template:
+2. In case there is still not a directory for your tenant in the repo you just forked, you will need to create one under the directory `cluster/stone-prd-rh01/tenants/<your-workspace-name>-tenant`.
+> **NOTE:** The RHTAP workspace is where you are deploying your applications on RHTAP. It can be found in the RHTAP UI, on the top left corner of the Applications page, just next to the `WS` letters.
+3. Create your Integration Test Scenario in that directory. You will need to use the same values you are currently using in your `pr_check.sh`. Remove the lines of the ones that you want to keep the default value. Use the following template for that:
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: IntegrationTestScenario
@@ -27,7 +28,7 @@ metadata:
   labels:
     test.appstudio.openshift.io/optional: "false" # Change to "true" if you don't need the test to be mandatory
   name: <name-of-your-rhtap-application>-tekton-insights 
-  namespace: <your-workspace-name>
+  namespace: <your-workspace-name>-tenant
 spec:
   application: <name-of-your-rhtap-application>
   resolverRef:
@@ -68,7 +69,7 @@ spec:
       value: # Whether to run IQE pod with a selenium container. Default is "false"
 ```
 > **NOTE:** You can fork the pipeline from https://github.com/gbenhaim/tekton-insights in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
-4. Add the following `kustomization.yaml` file:
+4. Add the following `kustomization.yaml` file in the same directory:
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -79,6 +80,6 @@ namespace: <your-workspace-name>-tenant
 ```
 5. Run the `build-manifests.sh`. This is script is using [Kustomize](https://kustomize.io/) to generate the Integration Test Scenario and secrets you will need to run the pipeline in the cluster. Check that the `auto-generated` directory is updated with these files. 
 6. Commit your directory and the `auto-generated` directory.
-7. Create a PR and ask for approval in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
+7. Create a PR from your fork, and ask for approval in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
 
-After the approval and merge of the PR, your integration test should be available in your RHTAP workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
+After the approval and merge of the PR, your integration test should be available in the "Integration tests" tab of your application in your RHTAP workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
