@@ -82,3 +82,11 @@ namespace: <your-workspace-name>-tenant
 7. Create a PR and ask for approval in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
 
 After the approval and merge of the PR, your integration test should be available in your RHTAP workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
+
+## Customizing the pipeline
+
+If you need to add new tasks in between the ones already in the pipeline, remove or edit the ones already there, you will need to customize the pipeline itself. For that, the first step is to fork this repository.
+
+After that, you can add all the tasks you want on the `tasks` directory and create a new pipeline on the `pipelines` directory. We are using Tekton, so for more information on how to create tasks or pipelines, follow their [documentation](https://tekton.dev/docs/). 
+
+To use the pipeline, you can follow the same steps in the [How to use](./README.md#how-to-use) heading. Just make sure to change the references to the pipeline inside the `.spec.resolverRef` to yours.
