@@ -1,0 +1,62 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com/gbenhaim/tekton-insights?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-event: '[pull_request]'
+    pipelinesascode.tekton.dev/on-target-branch: '[main]'
+  labels:
+    appstudio.openshift.io/application: tekton-insights
+    appstudio.openshift.io/component: tekton-insights
+  name: tekton-insights-on-pull-request
+  namespace: rhtap-migration-tenant
+spec:
+  params:
+  - name: revision
+    value: '{{revision}}'
+  - name: SNAPSHOT
+    value: |
+      {
+        "application": "insights-content-template-renderer",
+        "components": [
+            {
+                "name": "insights-content-template-renderer",
+                "containerImage": "quay.io/redhat-user-workloads/gbenhaim-tenant/insights-content-template-renderer/insights-content-template-renderer@sha256:536b8213a355ca363d90703a2b5391463a2d5692b85d84a8842a229acd9d4ec1",
+                "source": {
+                    "git": {
+                        "url": "https://github.com/gbenhaim/insights-content-template-renderer",
+                        "revision": "6489e0a2b5848d35e65419eb6dc22558c7a7a71e"
+                    }
+                }
+            }
+        ],
+        "artifacts": {}
+      }
+  - name: APP_NAME
+    value: ccx-data-pipeline
+  - name: COMPONENTS
+    value: insights-content-template-renderer
+  - name: COMPONENTS_W_RESOURCES
+    value: insights-content-template-renderer
+  - name: COMPONENT_NAME
+    value: insights-content-template-renderer
+  - name: IQE_PLUGINS
+    value: ccx
+  - name: IQE_FILTER_EXPRESSION
+    value: test_plugin_accessible
+  - name: IQE_CJI_TIMEOUT
+    value: "30m"
+  pipelineRef:
+      resolver: git
+      params:
+      - name: url
+        value: https://github.com/gbenhaim/tekton-insights
+      - name: revision
+        value: '{{revision}}'
+      - name: pathInRepo
+        value: pipelines/basic.yaml
+    
