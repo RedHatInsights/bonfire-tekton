@@ -6,6 +6,9 @@ metadata:
     build.appstudio.redhat.com/pipeline: "bonfire"
 spec:
   params:
+    - name: REVISION
+      type: string
+      description: Git commit revision to use for fetching the tasks
     - name: SNAPSHOT
       type: string
       description: |
@@ -101,7 +104,7 @@ spec:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/teardown.yaml        
   tasks:
@@ -117,7 +120,7 @@ spec:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/reserve-namespace.yaml
     - name: deploy-application
@@ -144,7 +147,7 @@ spec:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
     - name: run-cji-smoke-test
@@ -183,6 +186,6 @@ spec:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/run-cji-smoke-test.yaml

@@ -16,7 +16,7 @@ metadata:
   namespace: rhtap-migration-tenant
 spec:
   params:
-  - name: revision
+  - name: REVISION
     value: '{{revision}}'
   - name: SNAPSHOT
     value: |
