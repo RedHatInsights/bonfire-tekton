@@ -5,6 +5,10 @@ metadata:
   name: deploy
 spec:
   params:
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
     - name: SNAPSHOT
       type: string
       description: "AppStudio snapshot (see example above)"
@@ -35,7 +39,7 @@ spec:
       default: ""
   steps:
     - name: deploy-application
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
+      image: "$(params.BONFIRE_IMAGE)"
       env:
         - name: APP_INTERFACE_USERNAME
           valueFrom:

@@ -4,6 +4,10 @@ metadata:
   name: run-cji-smoke-test
 spec:
   params:
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
     - name: EPHEMERAL_ENV_PROVIDER_SECRET
       type: string
       default: ephemeral-env-provider
@@ -53,7 +57,7 @@ spec:
       default: "false"
   steps:
     - name: deploy-iqe-cji
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
+      image: "$(params.BONFIRE_IMAGE)"
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:

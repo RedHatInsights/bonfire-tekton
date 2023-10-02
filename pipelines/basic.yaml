@@ -6,6 +6,14 @@ metadata:
     build.appstudio.redhat.com/pipeline: "bonfire"
 spec:
   params:
+    - name: REVISION
+      type: string
+      description: Git commit revision to use for fetching the tasks
+      default: main
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
     - name: SNAPSHOT
       type: string
       description: |
@@ -95,13 +103,15 @@ spec:
           value: "$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
         - name: AWS_SECRET
           value: "$(params.AWS_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
       taskRef:
         resolver: git
         params:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/teardown.yaml        
   tasks:
@@ -111,17 +121,21 @@ spec:
           value: "$(context.pipelineRun.name)"
         - name: EPHEMERAL_ENV_PROVIDER_SECRET
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
       taskRef:
         resolver: git
         params:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/reserve-namespace.yaml
     - name: deploy-application
       params:
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
         - name: SNAPSHOT
           value: "$(params.SNAPSHOT)"
         - name: NS
@@ -144,11 +158,13 @@ spec:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
     - name: run-cji-smoke-test
       params:
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
         - name: NS
           value: "$(tasks.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
@@ -183,6 +199,6 @@ spec:
           - name: url
             value: https://github.com/gbenhaim/tekton-insights
           - name: revision
-            value: main
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/run-cji-smoke-test.yaml
