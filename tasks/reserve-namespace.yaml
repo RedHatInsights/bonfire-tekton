@@ -4,6 +4,10 @@ metadata:
   name: reserve-namespace
 spec:
   params:
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
     - name: NS_REQUESTER
       type: string
       description: The name of the person/pipeline that requested the namespace
@@ -16,7 +20,7 @@ spec:
       description: ""
   steps:
     - name: reserve-namespace
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
+      image: "$(params.BONFIRE_IMAGE)"
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
