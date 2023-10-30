@@ -16,6 +16,8 @@ metadata:
   namespace: rhtap-migration-tenant
 spec:
   params:
+  - name: URL
+    value: '{{source_url}}'
   - name: REVISION
     value: '{{revision}}'
   - name: SNAPSHOT
@@ -54,7 +56,7 @@ spec:
       resolver: git
       params:
       - name: url
-        value: https://github.com/gbenhaim/tekton-insights
+        value: '{{source_url}}'
       - name: revision
         value: '{{revision}}'
       - name: pathInRepo

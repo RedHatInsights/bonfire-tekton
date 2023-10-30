@@ -6,6 +6,10 @@ metadata:
     build.appstudio.redhat.com/pipeline: "bonfire"
 spec:
   params:
+    - name: URL
+      type: string
+      description: URL of the Git repository use for fetching the tasks
+      default: https://github.com/gbenhaim/tekton-insights
     - name: REVISION
       type: string
       description: Git commit revision to use for fetching the tasks
@@ -109,7 +113,7 @@ spec:
         resolver: git
         params:
           - name: url
-            value: https://github.com/gbenhaim/tekton-insights
+            value: "$(params.URL)"
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
@@ -127,7 +131,7 @@ spec:
         resolver: git
         params:
           - name: url
-            value: https://github.com/gbenhaim/tekton-insights
+            value: "$(params.URL)"
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
@@ -156,7 +160,7 @@ spec:
         resolver: git
         params:
           - name: url
-            value: https://github.com/gbenhaim/tekton-insights
+            value: "$(params.URL)"
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
@@ -197,7 +201,7 @@ spec:
         resolver: git
         params:
           - name: url
-            value: https://github.com/gbenhaim/tekton-insights
+            value: "$(params.URL)"
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
