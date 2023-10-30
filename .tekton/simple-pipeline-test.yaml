@@ -16,6 +16,8 @@ metadata:
   namespace: rhtap-migration-tenant
 spec:
   params:
+  - name: URL
+    value: '{{source_url}}'
   - name: REVISION
     value: '{{revision}}'
   - name: SNAPSHOT
