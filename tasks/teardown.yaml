@@ -4,6 +4,10 @@ metadata:
   name: teardown
 spec:
   params:
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:212dce94801cc1d4c9ec5f148fff715111cec403
     - name: NS
       type: string
       description: Namespace name to release
@@ -27,7 +31,7 @@ spec:
       emptyDir: {}
   steps:
     - name: collect-logs
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
+      image: "$(params.BONFIRE_IMAGE)"
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
@@ -56,7 +60,7 @@ spec:
         collect-logs.sh "$(params.NS)" /artifacts || :
         minio-collect.sh "$(params.NS)" /artifacts
     - name: upload-artifacts-to-s3
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
+      image: "$(params.BONFIRE_IMAGE)"
       env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
@@ -86,7 +90,7 @@ spec:
         echo -n ${url//'\n'}> "$(results.ARTIFACTS_URL.path)"
 
     - name: release-namespace
-      image: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:6e493be29c210a6a6aadbabbef0f2654a611be5e
+      image: "$(params.BONFIRE_IMAGE)"
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
