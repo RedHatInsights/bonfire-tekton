@@ -67,6 +67,15 @@ spec:
       value: # "something" -- value to set for ENV_FOR_DYNACONF. Default is "clowder_smoke"
     - name: IQE_SELENIUM
       value: # Whether to run IQE pod with a selenium container. Default is "false"
+    - name: IQE_PARALLEL_ENABLED
+      value: # Whether to run IQE in parallel mode. Default is "false"
+    - name: IQE_PARALLEL_WORKER_COUNT
+      value: # The number of parallel workers to use. Default is "".
+    - name: IQE_RP_ARGS
+      value: # Arguments to send to reportportal. Default is "".
+    - name: IQE_IBUTSU_SOURCE
+      value: # Ibutsu source for the current run. Default is "".
+
 ```
 > **NOTE:** You can fork the pipeline from https://github.com/gbenhaim/tekton-insights in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
 4. Add the following `kustomization.yaml` file in the same directory:
