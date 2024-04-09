@@ -27,11 +27,11 @@ spec:
         "components": [
             {
                 "name": "insights-content-template-renderer",
-                "containerImage": "quay.io/redhat-user-workloads/gbenhaim-tenant/insights-content-template-renderer/insights-content-template-renderer@sha256:536b8213a355ca363d90703a2b5391463a2d5692b85d84a8842a229acd9d4ec1",
+                "containerImage": "quay.io/redhat-user-workloads/rhtap-migration-tenant/insights-content-template-renderer/insights-content-template-renderer@sha256:beae88f2ce5129746a5155b61aab495cb088eef3a68be5d2dbe04663f44a5c36",
                 "source": {
                     "git": {
                         "url": "https://github.com/gbenhaim/insights-content-template-renderer",
-                        "revision": "6489e0a2b5848d35e65419eb6dc22558c7a7a71e"
+                        "revision": "0a807e29d96ee10154b191a202af608ab184f037"
                     }
                 }
             }
