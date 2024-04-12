@@ -188,7 +188,7 @@ spec:
             value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
-    - name: run-cji-smoke-test
+    - name: run-iqe-cji
       params:
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
@@ -238,4 +238,4 @@ spec:
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
-            value: tasks/run-cji-smoke-test.yaml
+            value: tasks/run-iqe-cji.yaml

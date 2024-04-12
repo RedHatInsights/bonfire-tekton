@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: run-cji-smoke-test
+  name: run-iqe-cji
 spec:
   params:
     - name: BONFIRE_IMAGE
@@ -128,5 +128,5 @@ spec:
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
 
-        echo "Deploying the IQE CJI smoke test"
+        echo "Deploying the IQE CJI test"
         deploy-iqe-cji.sh "$(params.NS)" "$(params.NS_REQUESTER)"
