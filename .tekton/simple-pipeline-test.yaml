@@ -23,15 +23,15 @@ spec:
   - name: SNAPSHOT
     value: |
       {
-        "application": "insights-content-template-renderer",
+        "application": "insights-ingress-go",
         "components": [
             {
-                "name": "insights-content-template-renderer",
-                "containerImage": "quay.io/redhat-user-workloads/gbenhaim-tenant/insights-content-template-renderer/insights-content-template-renderer@sha256:536b8213a355ca363d90703a2b5391463a2d5692b85d84a8842a229acd9d4ec1",
+                "name": "ingress",
+                "containerImage": "quay.io/redhat-user-workloads/rhtap-migration-tenant/insights-ingress-go/ingress:build-f303d-1712948816@sha256:12e29022a7d4736dd3c8377aa9d89d66d52b4f7566f0137d49295e4487a3b992",
                 "source": {
                     "git": {
-                        "url": "https://github.com/gbenhaim/insights-content-template-renderer",
-                        "revision": "6489e0a2b5848d35e65419eb6dc22558c7a7a71e"
+                        "url": "https://github.com/ernesgonzalez33/insights-ingress-go",
+                        "revision": "1d5de29b99c26dd432f289d3408590269d0f58a6"
                     }
                 }
             }
@@ -39,19 +39,13 @@ spec:
         "artifacts": {}
       }
   - name: APP_NAME
-    value: ccx-data-pipeline
-  - name: COMPONENTS
-    value: insights-content-template-renderer
-  - name: COMPONENTS_W_RESOURCES
-    value: insights-content-template-renderer
+    value: ingress
   - name: COMPONENT_NAME
-    value: insights-content-template-renderer
+    value: ingress
   - name: IQE_PLUGINS
-    value: ccx
-  - name: IQE_FILTER_EXPRESSION
-    value: test_plugin_accessible
-  - name: IQE_CJI_TIMEOUT
-    value: "30m"
+    value: ingress
+  - name: IQE_MARKER_EXPRESSION
+    value: smoke
   pipelineRef:
       resolver: git
       params:

@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:212dce94801cc1d4c9ec5f148fff715111cec403
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:5922520a765e4a7e2164b84f3391feca42aab6c7
     - name: EPHEMERAL_ENV_PROVIDER_SECRET
       type: string
       default: ephemeral-env-provider
