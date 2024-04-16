@@ -201,8 +201,6 @@ spec:
           value: "$(params.COMPONENT_NAME)"
         - name: BONFIRE_COMPONENT_NAME
           value: "$(params.BONFIRE_COMPONENT_NAME)"
-        - name: BONFIRE_COMPONENT_NAME
-          value: "$(params.BONFIRE_COMPONENT_NAME)"
         - name: IQE_PLUGINS
           value: "$(params.IQE_PLUGINS)"
         - name: IQE_MARKER_EXPRESSION
