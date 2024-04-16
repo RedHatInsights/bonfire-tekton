@@ -170,6 +170,8 @@ spec:
           value: "$(params.APP_INTERFACE_SECRET)"
         - name: APP_NAME
           value: "$(params.APP_NAME)"
+        - name: BONFIRE_COMPONENT_NAME
+          value: "$(params.BONFIRE_COMPONENT_NAME)"
         - name: COMPONENTS
           value: "$(params.COMPONENTS)"
         - name: COMPONENTS_W_RESOURCES
@@ -197,6 +199,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: COMPONENT_NAME
           value: "$(params.COMPONENT_NAME)"
+        - name: BONFIRE_COMPONENT_NAME
+          value: "$(params.BONFIRE_COMPONENT_NAME)"
         - name: BONFIRE_COMPONENT_NAME
           value: "$(params.BONFIRE_COMPONENT_NAME)"
         - name: IQE_PLUGINS
