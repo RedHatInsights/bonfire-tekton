@@ -20,6 +20,9 @@ spec:
     - name: COMPONENT_NAME
       type: string
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
+    - name: BONFIRE_COMPONENT_NAME
+      type: string
+      description: name of the app-sre component name
     - name: IQE_PLUGINS
       type: string
       description: name of the IQE plugin for this app.
@@ -87,6 +90,8 @@ spec:
               key: url
         - name: COMPONENT_NAME
           value: $(params.COMPONENT_NAME)
+        - name: BONFIRE_COMPONENT_NAME
+          value: $(BONFIRE_COMPONENT_NAME)
         - name: IQE_PLUGINS
           value: $(params.IQE_PLUGINS)
         - name: IQE_MARKER_EXPRESSION
