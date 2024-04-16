@@ -29,6 +29,9 @@ spec:
     - name: APP_NAME
       type: string
       description: name of app-sre "application" folder this component lives in
+    - name: BONFIRE_COMPONENT_NAME
+      type: string
+      description: name of the app-sre component name
     - name: COMPONENTS
       type: string
       description: space-separated list of components to load
@@ -68,6 +71,8 @@ spec:
               key: url
         - name: APP_NAME
           value: $(params.APP_NAME)
+        - name: BONFIRE_COMPONENT_NAME
+          value: $(params.BONFIRE_COMPONENT_NAME)
         - name: COMPONENTS
           value: $(params.COMPONENTS)
         - name: COMPONENTS_W_RESOURCES
