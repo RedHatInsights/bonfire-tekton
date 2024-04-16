@@ -8,7 +8,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:06581a57e6209173defc2e00bd7af3d1d1fcc96a
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:build-3e00a-1713277065
     - name: SNAPSHOT
       type: string
       description: "AppStudio snapshot (see example above)"
