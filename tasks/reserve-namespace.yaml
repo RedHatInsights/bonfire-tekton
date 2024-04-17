@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:build-3e00a-1713277065
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:fe1ebac02da86b0d0dfca5ee25857af801664110
     - name: NS_REQUESTER
       type: string
       description: The name of the person/pipeline that requested the namespace
