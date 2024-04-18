@@ -23,6 +23,7 @@ spec:
     - name: BONFIRE_COMPONENT_NAME
       type: string
       description: name of the app-sre component name
+      default: ""
     - name: IQE_PLUGINS
       type: string
       description: name of the IQE plugin for this app.
