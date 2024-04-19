@@ -91,7 +91,6 @@ spec:
         login.sh
 
         echo "deploying to ephemeral"
-        echo "BONFIRE_COMPONENT_NAME"
         EXTRA_DEPLOY_ARGS="$(parse-snapshot.py)"
         export EXTRA_DEPLOY_ARGS
         deploy.sh "$(params.NS)" "$(params.NS_REQUESTER)" 
