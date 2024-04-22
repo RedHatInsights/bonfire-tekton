@@ -1,6 +1,6 @@
-# Insights Integration Test in Tekton for RHTAP
+# Insights Integration Test in Tekton for Konflux
 
-This repository has a Tekton pipeline, and its tasks, made based on the way the tests are currently done with Clowder and Bonfire with the purpose of integrating them with RHTAP.
+This repository has a Tekton pipeline, and its tasks, made based on the way the tests are currently done with Clowder and Bonfire with the purpose of integrating them with Konflux.
 
 For more information about how tests are currently handled, see this [repo](https://github.com/RedHatInsights/cicd-tools).
 
@@ -8,18 +8,18 @@ For more information about how tests are currently handled, see this [repo](http
 
 ### Prerequisites
 
-* Access to RHTAP. Join the wailist [here](https://console.redhat.com/preview/hac/application-pipeline) and ask for access in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) slack channel.
-* Application in RHTAP already created. You can follow the instructions in the RHTAP [docs](https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/getting-started/get-started/#creating-your-first-application). Access RHTAP [here](https://console.redhat.com/preview/hac/application-pipeline).
-> **IMPORTANT:** The name of the RHTAP Component must be the same name of the `COMPONENT_NAME` parameter in the Integration Test Scenario below.
+* Access to Konflux. Join the wailist [here](https://console.redhat.com/preview/hac/application-pipeline) and ask for access in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) slack channel.
+* Application in Konflux already created. You can follow the instructions in the Konflux [docs](https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/getting-started/get-started/#creating-your-first-application). Access Konflux [here](https://console.redhat.com/preview/hac/application-pipeline).
+> **IMPORTANT:** The name of the Konflux Component must be the same name of the `COMPONENT_NAME` parameter in the Integration Test Scenario below.
 * Kustomize installed in your computer. Follow the instalations [intructions](https://kubectl.docs.kubernetes.io/installation/kustomize/).
 
 ### Add the Integration Test Scenario to your application
 
-To add the Integration Test Scenario to RHTAP, you need to follow these next steps:
+To add the Integration Test Scenario to Konflux, you need to follow these next steps:
 
 1. Fork the tenants-config [repo](https://github.com/redhat-appstudio/tenants-config.git)
 2. In case there is still not a directory for your tenant in the repo you just forked, you will need to create one under the directory `cluster/stone-prd-rh01/tenants/<your-workspace-name>-tenant`.
-> **NOTE:** The RHTAP workspace is where you are deploying your applications on RHTAP. It can be found in the RHTAP UI, on the top left corner of the Applications page, just next to the `WS` letters.
+> **NOTE:** The Konflux workspace is where you are deploying your applications on Konflux. It can be found in the Konflux UI, on the top left corner of the Applications page, just next to the `WS` letters.
 3. Create your Integration Test Scenario in that directory. You will need to use the same values you are currently using in your `pr_check.sh`. Remove the lines of the ones that you want to keep the default value. Use the following template for that:
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
@@ -27,10 +27,10 @@ kind: IntegrationTestScenario
 metadata:
   labels:
     test.appstudio.openshift.io/optional: "false" # Change to "true" if you don't need the test to be mandatory
-  name: <name-of-your-rhtap-application>-tekton-insights 
+  name: <name-of-your-konflux-application>-tekton-insights 
   namespace: <your-workspace-name>-tenant
 spec:
-  application: <name-of-your-rhtap-application>
+  application: <name-of-your-konflux-application>
   resolverRef:
     params:
     - name: url
@@ -47,8 +47,10 @@ spec:
       value: # Space-separated list of components to load.
     - name: COMPONENTS_W_RESOURCES
       value: # List of components to keep.
-    - name: COMPONENT_NAME #IMPORTANT: Your component in RHTAP has to be named the same as this field.
-      value: # Name of app-sre "resourceTemplate" in deploy.yaml for this component. 
+    - name: BONFIRE_COMPONENT_NAME
+      value: # Name of app-sre "resourceTemplate" in deploy.yaml for this component. If it is the same as the name in Konflux, you don't need to fill this  
+    - name: COMPONENT_NAME
+      value: # Name of your component name in Konflux
     - name: IQE_PLUGINS
       value: # Name of the IQE plugin for this app.
     - name: IQE_MARKER_EXPRESSION
@@ -89,9 +91,9 @@ namespace: <your-workspace-name>-tenant
 ```
 5. Run the `build-manifests.sh`. This is script is using [Kustomize](https://kustomize.io/) to generate the Integration Test Scenario and secrets you will need to run the pipeline in the cluster. Check that the `auto-generated` directory is updated with these files. 
 6. Commit your directory and the `auto-generated` directory.
-7. Create a PR from your fork, and ask for approval in the [#rhtap-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
+7. Create a PR from your fork, and ask for approval in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
 
-After the approval and merge of the PR, your integration test should be available in the "Integration tests" tab of your application in your RHTAP workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
+After the approval and merge of the PR, your integration test should be available in the "Integration tests" tab of your application in your Konflux workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
 
 ## Customizing the pipeline
 
