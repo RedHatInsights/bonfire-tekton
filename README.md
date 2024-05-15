@@ -27,14 +27,14 @@ kind: IntegrationTestScenario
 metadata:
   labels:
     test.appstudio.openshift.io/optional: "false" # Change to "true" if you don't need the test to be mandatory
-  name: <name-of-your-konflux-application>-tekton-insights 
+  name: <name-of-your-konflux-application>-bonfire-tekton
   namespace: <your-workspace-name>-tenant
 spec:
   application: <name-of-your-konflux-application>
   resolverRef:
     params:
     - name: url
-      value: https://github.com/gbenhaim/tekton-insights.git # Temporary on gbenhaim's org. Also, you can fork it and reference yours here.
+      value: https://github.com/RedHatInsigths/bonfire-tekton.git
     - name: revision
       value: main # Or whatever branch you want to test
     - name: pathInRepo
@@ -79,7 +79,7 @@ spec:
       value: # Ibutsu source for the current run. Default is "".
 
 ```
-> **NOTE:** You can fork the pipeline from https://github.com/gbenhaim/tekton-insights in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
+> **NOTE:** You can fork the pipeline from https://github.com/RedHatInsigths/bonfire-tekton in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
 4. Add the following `kustomization.yaml` file in the same directory:
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
