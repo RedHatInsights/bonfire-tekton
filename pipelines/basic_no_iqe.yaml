@@ -1,0 +1,190 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: bonfire
+  labels:
+    build.appstudio.redhat.com/pipeline: "bonfire"
+spec:
+  params:
+    - name: URL
+      type: string
+      description: URL of the Git repository use for fetching the tasks
+      default: https://github.com/gbenhaim/tekton-insights
+    - name: REVISION
+      type: string
+      description: Git commit revision to use for fetching the tasks
+      default: main
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-user-workloads/rhtap-migration-tenant/bonfire-cicd-tools/cicd-tools:c6ef74cf10ae8a11c5dca9580eb3c38417ea1278
+    - name: SNAPSHOT
+      type: string
+      description: |
+        Spec section of an ApplicationSnapshot resource. Not all fields of the
+        resource are required. A minimal example:
+          {
+            "components": [
+              {
+                "containerImage": "quay.io/example/repo:latest"
+              }
+            ]
+          }
+        Each "containerImage" in the "components" array is validated.
+    - name: EPHEMERAL_ENV_PROVIDER_SECRET
+      type: string
+      default: ephemeral-env-provider
+      description: "Secret for connecting to ephemeral env provider cluster"
+    - name: APP_INTERFACE_SECRET
+      type: string
+      default: app-interface
+      description: "Secret for connecting to app-interface"
+    - name: APP_NAME
+      type: string
+      description: name of app-sre "application" folder this component lives in
+    - name: COMPONENTS
+      type: string
+      description: space-separated list of components to load
+      default: ""
+    - name: COMPONENTS_W_RESOURCES
+      type: string
+      description: component to keep
+      default: ""
+    - name: AWS_SECRET
+      type: string
+      default: rh-artifacts-bucket
+      description: Secret with connection details to S3
+    - name: BONFIRE_COMPONENT_NAME
+      type: string
+      default: ""
+      description: name of the app-sre component name
+    - name: COMPONENT_NAME
+      type: string
+      description: name of app-sre "resourceTemplate" in deploy.yaml for this component
+    - name: IQE_PLUGINS
+      type: string
+      description: name of the IQE plugin for this app.
+    - name: IQE_MARKER_EXPRESSION
+      type: string
+      description: This is the value passed to pytest -m
+      default: ""
+    - name: IQE_FILTER_EXPRESSION
+      type: string
+      description: This is the value passed to pytest -k
+      default: ""
+    - name: IQE_REQUIREMENTS
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_REQUIREMENTS_PRIORITY
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_TEST_IMPORTANCE
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_CJI_TIMEOUT
+      type: string
+      description: This is the time to wait for smoke test to complete or fail
+      default: 30m
+    - name: IQE_ENV
+      type: string
+      description: "something -- value to set for ENV_FOR_DYNACONF, default is \"clowder_smoke\""
+      default: "clowder_smoke"
+    - name: IQE_SELENIUM
+      type: string
+      description: "true -- whether to run IQE pod with a selenium container, default is false"
+      default: "false"
+    - name: IQE_PARALLEL_ENABLED
+      type: string
+      description: "whether to run IQE with --parallel-enabled"
+      default: "false"
+    - name: IQE_PARALLEL_WORKER_COUNT
+      type: string
+      description: "Number of parallel workers to use"
+      default: ""
+    - name: IQE_RP_ARGS
+      type: string
+      description: "Arguments to send to reportportal"
+      default: ""
+    - name: IQE_IBUTSU_SOURCE
+      type: string
+      description: "Update the ibutsu source for the current run"
+      default: ""
+
+  results:
+    - name: ARTIFACTS_URL
+      description: URL for the test's artifacts
+      value: $(finally.teardown.results.ARTIFACTS_URL)
+  finally:
+    - name: teardown
+      params:
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: ARTIFACTS_KEY
+          value: "$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
+        - name: AWS_SECRET
+          value: "$(params.AWS_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/teardown.yaml
+  tasks:
+    - name: reserve-namespace
+      params:
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/reserve-namespace.yaml
+    - name: deploy-application
+      params:
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: SNAPSHOT
+          value: "$(params.SNAPSHOT)"
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: APP_INTERFACE_SECRET
+          value: "$(params.APP_INTERFACE_SECRET)"
+        - name: APP_NAME
+          value: "$(params.APP_NAME)"
+        - name: BONFIRE_COMPONENT_NAME
+          value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: COMPONENTS
+          value: "$(params.COMPONENTS)"
+        - name: COMPONENTS_W_RESOURCES
+          value: "$(params.COMPONENTS_W_RESOURCES)"
+      runAfter:
+        - reserve-namespace
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/deploy.yaml
