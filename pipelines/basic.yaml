@@ -112,6 +112,10 @@ spec:
       type: string
       description: "Update the ibutsu source for the current run"
       default: ""
+    - name: EXTRA_DEPLOY_ARGS
+      type: string
+      description: "Extra arguments for the deployment"
+      default: ""
 
   results:
     - name: ARTIFACTS_URL
@@ -177,6 +181,8 @@ spec:
           value: "$(params.COMPONENTS)"
         - name: COMPONENTS_W_RESOURCES
           value: "$(params.COMPONENTS_W_RESOURCES)"
+        - name: EXTRA_DEPLOY_ARGS
+          value: "$(params.EXTRA_DEPLOY_ARGS)"
       runAfter:
         - reserve-namespace
       taskRef:

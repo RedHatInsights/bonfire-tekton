@@ -41,6 +41,10 @@ spec:
       type: string
       description: component to keep
       default: ""
+    - name: EXTRA_DEPLOY_ARGS
+      type: string
+      description: "Extra arguments for the deployment"
+      default: ""
   steps:
     - name: deploy-application
       image: "$(params.BONFIRE_IMAGE)"
@@ -83,6 +87,8 @@ spec:
           value: $(params.SNAPSHOT)
         - name: BONFIRE_BOT
           value: "true"
+        - name: EXTRA_DEPLOY_ARGS
+          value: "$(params.EXTRA_DEPLOY_ARGS)"
       script: |
         #!/bin/bash
         set -ex
@@ -91,6 +97,10 @@ spec:
         login.sh
 
         echo "deploying to ephemeral"
-        EXTRA_DEPLOY_ARGS="$(parse-snapshot.py)"
+        if [ -z "${EXTRA_DEPLOY_ARGS}" ]; then
+          EXTRA_DEPLOY_ARGS="$(parse-snapshot.py)"
+        else
+          EXTRA_DEPLOY_ARGS+="$(parse-snapshot.py)"
+        fi
         export EXTRA_DEPLOY_ARGS
         deploy.sh "$(params.NS)" "$(params.NS_REQUESTER)" 
