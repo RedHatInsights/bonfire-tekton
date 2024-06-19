@@ -45,6 +45,10 @@ spec:
       type: string
       description: "Extra arguments for the deployment"
       default: ""
+    - name: DEPLOY_FRONTENDS
+      type: string
+      description: "Deploy frontend in the env or not"
+      default: ""
   steps:
     - name: deploy-application
       image: "$(params.BONFIRE_IMAGE)"
@@ -89,6 +93,8 @@ spec:
           value: "true"
         - name: EXTRA_DEPLOY_ARGS
           value: "$(params.EXTRA_DEPLOY_ARGS)"
+        - name: DEPLOY_FRONTENDS
+          value: "$(params.DEPLOY_FRONTENDS)"
       script: |
         #!/bin/bash
         set -ex
