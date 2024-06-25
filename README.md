@@ -20,7 +20,7 @@ To add the Integration Test Scenario to Konflux, you need to follow these next s
 1. Fork the tenants-config [repo](https://github.com/redhat-appstudio/tenants-config.git)
 2. In case there is still not a directory for your tenant in the repo you just forked, you will need to create one under the directory `cluster/stone-prd-rh01/tenants/<your-workspace-name>-tenant`.
 > **NOTE:** The Konflux workspace is where you are deploying your applications on Konflux. It can be found in the Konflux UI, on the top left corner of the Applications page, just next to the `WS` letters.
-3. Create your Integration Test Scenario in that directory. You will need to use the same values you are currently using in your `pr_check.sh`. Remove the lines of the ones that you want to keep the default value. Use the following template for that:
+3. Create your Integration Test Scenario in that directory, name it `<your-konflux-application-name>-bonfire-tekton.yaml`. You will need to use the same values you are currently using in your `pr_check.sh`. Remove the lines of the ones that you want to keep the default value. Remove parameters which are not in use (remove both: name and value). Use the following template for that:
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: IntegrationTestScenario
@@ -34,7 +34,7 @@ spec:
   resolverRef:
     params:
     - name: url
-      value: https://github.com/RedHatInsigths/bonfire-tekton.git
+      value: https://github.com/RedHatInsights/bonfire-tekton.git
     - name: revision
       value: main # Or whatever branch you want to test
     - name: pathInRepo
@@ -85,7 +85,7 @@ spec:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - <your-test-integration-scenario-filename>.yaml
+  - <your-konflux-application-name>-bonfire-tekton.yaml
   - ../../../../lib/consoledot-test-pipeline
 namespace: <your-workspace-name>-tenant
 ```
