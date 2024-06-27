@@ -1,0 +1,53 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com:RedHatInsights/bonfire-tekton?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
+      == "main" && files.all.exists(x, x.matches('.tekton/|pipelines/|tasks/'))
+  labels:
+    appstudio.openshift.io/application: bonfire-tekton
+    appstudio.openshift.io/component: bonfire-tekton
+  name: bonfire-tekton-on-pull-no-iqe-request
+  namespace: rhtap-migration-tenant
+spec:
+  params:
+  - name: URL
+    value: '{{source_url}}'
+  - name: REVISION
+    value: '{{revision}}'
+  - name: SNAPSHOT
+    value: |
+      {
+        "application": "insights-ingress-go",
+        "components": [
+            {
+                "name": "ingress",
+                "containerImage": "quay.io/redhat-user-workloads/rhtap-migration-tenant/insights-ingress-go/ingress:build-f303d-1712948816@sha256:12e29022a7d4736dd3c8377aa9d89d66d52b4f7566f0137d49295e4487a3b992",
+                "source": {
+                    "git": {
+                        "url": "https://github.com/ernesgonzalez33/insights-ingress-go",
+                        "revision": "1d5de29b99c26dd432f289d3408590269d0f58a6"
+                    }
+                }
+            }
+        ],
+        "artifacts": {}
+      }
+  - name: APP_NAME
+    value: ingress
+  - name: COMPONENT_NAME
+    value: ingress
+  pipelineRef:
+      resolver: git
+      params:
+      - name: url
+        value: '{{source_url}}'
+      - name: revision
+        value: '{{revision}}'
+      - name: pathInRepo
+        value: pipelines/basic_no_iqe.yaml
