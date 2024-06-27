@@ -12,7 +12,7 @@ metadata:
   labels:
     appstudio.openshift.io/application: bonfire-tekton
     appstudio.openshift.io/component: bonfire-tekton
-  name: bonfire-tekton-on-pull-request
+  name: bonfire-tekton-on-pull-no-iqe-request
   namespace: rhtap-migration-tenant
 spec:
   params:
