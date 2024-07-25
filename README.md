@@ -17,9 +17,9 @@ For more information about how tests are currently handled, see this [repo](http
 
 To add the Integration Test Scenario to Konflux, you need to follow these next steps:
 
-1. Fork the tenants-config [repo](https://github.com/redhat-appstudio/tenants-config.git)
-2. In case there is still not a directory for your tenant in the repo you just forked, you will need to create one under the directory `cluster/stone-prd-rh01/tenants/<your-workspace-name>-tenant`.
-> **NOTE:** The Konflux workspace is where you are deploying your applications on Konflux. It can be found in the Konflux UI, on the top left corner of the Applications page, just next to the `WS` letters.
+1. Clone the konflux-release-data [repo](https://gitlab.cee.redhat.com/releng/konflux-release-data.git)
+2. In case there is still not a directory for your tenant in the repo you just forked, you will need to create one under the directory `tenants-config/cluster/<your-cluster>/tenants/<your-workspace-name>-tenant`.
+> **NOTE:** The Konflux workspace is where you are deploying your applications on Konflux. It can be found in the Konflux UI, on the top left corner of the Applications page, just next to the `WS` letters. If you don't know, which cluster you should use, visit this [link](https://gitlab.cee.redhat.com/konflux/docs/users/-/blob/main/topics/overview/deployments.md?ref_type=heads).
 3. Create your Integration Test Scenario in that directory, name it `<your-konflux-application-name>-bonfire-tekton.yaml`. You will need to use the same values you are currently using in your `pr_check.sh`. Remove the lines of the ones that you want to keep the default value. Remove parameters which are not in use (remove both: name and value). Use the following template for that:
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
