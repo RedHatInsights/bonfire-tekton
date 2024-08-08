@@ -38,7 +38,7 @@ spec:
     - name: revision
       value: main # Or whatever branch you want to test
     - name: pathInRepo
-      value: pipelines/basic.yaml # This is the path to the pipeline
+      value: pipelines/basic.yaml # If you have no IQE tests, change this to pipelines/basic_no_iqe.yaml
     resolver: git
   params:
     - name: APP_NAME
@@ -52,7 +52,7 @@ spec:
     - name: COMPONENT_NAME
       value: # Name of your component name in Konflux
     - name: IQE_PLUGINS
-      value: # Name of the IQE plugin for this app.
+      value: # Name of the IQE plugin for this app. NOTE: this should be "" if you have no IQE tests.
     - name: IQE_MARKER_EXPRESSION
       value: # This is the value passed to pytest -m. Default is ""
     - name: IQE_FILTER_EXPRESSION
@@ -94,6 +94,10 @@ namespace: <your-workspace-name>-tenant
 7. Create a PR from your fork, and ask for approval in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
 
 After the approval and merge of the PR, your integration test should be available in the "Integration tests" tab of your application in your Konflux workspace. Remember that to be able of running it, you will need to trigger a new build by making a change on your repository and creating a PR.
+
+## What if we don't have IQE tests?
+
+If you have no IQE tests, ensure that your `IQE_PLUGINS` value is set to `""`. You must also set the `pathInRepo` to be `pipelines/basic_no_iqe.yaml`. A [working example can be found](https://gitlab.cee.redhat.com/releng/konflux-release-data/-/blob/main/tenants-config/cluster/stone-prd-rh01/tenants/hcc-platex-services-tenant/quickstarts.bonfire-tekton.yaml?ref_type=heads) in Gitlab.
 
 ## Customizing the pipeline
 
