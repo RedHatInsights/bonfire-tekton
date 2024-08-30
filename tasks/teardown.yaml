@@ -83,6 +83,8 @@ spec:
       script: |
         #!/bin/bash
         set -ex
+
+        # Comment to trigger PR
         
         echo "Copying files to S3"
         aws s3 cp --recursive /artifacts "s3://${BUCKET}/$(params.ARTIFACTS_KEY)"
