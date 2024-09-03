@@ -51,6 +51,8 @@ spec:
       value: # Name of app-sre "resourceTemplate" in deploy.yaml for this component. If it is the same as the name in Konflux, you don't need to fill this  
     - name: COMPONENT_NAME
       value: # Name of your component name in Konflux
+    - name: EXTRA_DEPLOY_ARGS
+      value: # Extra arguments for the deployment
     - name: IQE_PLUGINS
       value: # Name of the IQE plugin for this app. NOTE: this should be "" if you have no IQE tests.
     - name: IQE_MARKER_EXPRESSION
