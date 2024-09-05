@@ -120,7 +120,10 @@ spec:
       type: string
       description: "Deploy frontend in the env or not"
       default: ""
-
+    - name: DEPLOY_TIMEOUT
+      type: string
+      description: "Deploy timeout"
+      default: "900"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -189,6 +192,8 @@ spec:
           value: "$(params.EXTRA_DEPLOY_ARGS)"
         - name: DEPLOY_FRONTENDS
           value: "$(params.DEPLOY_FRONTENDS)"
+        - name: DEPLOY_TIMEOUT
+          value: "$(params.DEPLOY_TIMEOUT)"
       runAfter:
         - reserve-namespace
       taskRef:

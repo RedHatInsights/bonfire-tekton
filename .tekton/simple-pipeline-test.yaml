@@ -46,6 +46,8 @@ spec:
     value: ingress
   - name: IQE_MARKER_EXPRESSION
     value: smoke
+  - name: DEPLOY_TIMEOUT
+    value: "950"
   pipelineRef:
       resolver: git
       params:

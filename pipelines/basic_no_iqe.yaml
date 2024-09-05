@@ -9,7 +9,7 @@ spec:
     - name: URL
       type: string
       description: URL of the Git repository use for fetching the tasks
-      default: https://github.com/gbenhaim/tekton-insights
+      default: 'https://github.com/RedHatInsights/bonfire-tekton'
     - name: REVISION
       type: string
       description: Git commit revision to use for fetching the tasks
@@ -61,7 +61,18 @@ spec:
     - name: COMPONENT_NAME
       type: string
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
-
+    - name: EXTRA_DEPLOY_ARGS
+      type: string
+      description: "Extra arguments for the deployment"
+      default: ""
+    - name: DEPLOY_FRONTENDS
+      type: string
+      description: "Deploy frontend in the env or not"
+      default: ""
+    - name: DEPLOY_TIMEOUT
+      type: string
+      description: "Deploy timeout"
+      default: "900"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -126,6 +137,12 @@ spec:
           value: "$(params.COMPONENTS)"
         - name: COMPONENTS_W_RESOURCES
           value: "$(params.COMPONENTS_W_RESOURCES)"
+        - name: EXTRA_DEPLOY_ARGS
+          value: "$(params.EXTRA_DEPLOY_ARGS)"
+        - name: DEPLOY_FRONTENDS
+          value: "$(params.DEPLOY_FRONTENDS)"
+        - name: DEPLOY_TIMEOUT
+          value: "$(params.DEPLOY_TIMEOUT)"
       runAfter:
         - reserve-namespace
       taskRef:
