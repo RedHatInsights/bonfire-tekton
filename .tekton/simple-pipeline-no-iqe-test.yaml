@@ -42,6 +42,8 @@ spec:
     value: ingress
   - name: COMPONENT_NAME
     value: ingress
+  - name: DEPLOY_TIMEOUT
+    value: "950"
   pipelineRef:
       resolver: git
       params:

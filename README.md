@@ -79,7 +79,8 @@ spec:
       value: # Arguments to send to reportportal. Default is "".
     - name: IQE_IBUTSU_SOURCE
       value: # Ibutsu source for the current run. Default is "".
-
+    - name: DEPLOY_TIMEOUT
+      value: # Deploy timeout. Default is "900"
 ```
 > **NOTE:** You can fork the pipeline from https://github.com/RedHatInsigths/bonfire-tekton in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
 4. Add the following `kustomization.yaml` file in the same directory:
