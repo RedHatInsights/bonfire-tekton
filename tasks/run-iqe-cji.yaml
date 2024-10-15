@@ -75,6 +75,10 @@ spec:
       type: string
       description: "Update the ibutsu source for the current run"
       default: ""
+    - name: IQE_IMAGE_TAG
+      type: string
+      description: "Tag of the IQE image to be used"
+      default: ""
   steps:
     - name: deploy-iqe-cji
       image: "$(params.BONFIRE_IMAGE)"
@@ -121,6 +125,8 @@ spec:
           value: ${params.IQE_IBUTSU_SOURCE}
         - name: BONFIRE_BOT
           value: "true"
+        - name: IQE_IMAGE_TAG
+          value: $(params.IQE_IMAGE_TAG)
       script: |
         #!/bin/bash
         set -ex
