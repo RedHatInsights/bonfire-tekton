@@ -81,6 +81,8 @@ spec:
       value: # Ibutsu source for the current run. Default is "".
     - name: DEPLOY_TIMEOUT
       value: # Deploy timeout. Default is "900"
+    - name: IQE_IMAGE_TAG
+      value: # The IQE image used to run tests. Default is "".
 ```
 > **NOTE:** You can fork the pipeline from https://github.com/RedHatInsigths/bonfire-tekton in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
 4. Add the following `kustomization.yaml` file in the same directory:
