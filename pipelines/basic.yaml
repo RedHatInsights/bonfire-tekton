@@ -250,7 +250,7 @@ spec:
         - name: IQE_IBUTSU_SOURCE
           value: "${params.IQE_IBUTSU_SOURCE}"
         - name: IQE_IMAGE_TAG
-          value: "${params.IQE_IMAGE_TAG}"
+          value: "$(params.IQE_IMAGE_TAG)"
       runAfter:
         - deploy-application
       taskRef:
