@@ -17,7 +17,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-user-workloads/hcc-devprod-tenant/hcc-cicd-tools/cicd-tools:8a88b4a8199f8af37b79d6975fa662faa5011501
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:bb80105
     - name: SNAPSHOT
       type: string
       description: |
@@ -95,6 +95,7 @@ spec:
     - name: IQE_ENV_VARS
       type: string
       description: "Comma delimited string with additional values, such as IQE_ENV_VARS='DYNACONF_USER_PROVIDER__rbac_enabled=false,foo=bar'"
+      default: ""
     - name: IQE_SELENIUM
       type: string
       description: "true -- whether to run IQE pod with a selenium container, default is false"
