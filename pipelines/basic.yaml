@@ -92,6 +92,10 @@ spec:
       type: string
       description: "something -- value to set for ENV_FOR_DYNACONF, default is \"clowder_smoke\""
       default: "clowder_smoke"
+    - name: IQE_ENV_VARS
+      type: string
+      description: "Comma delimited string with additional values, such as IQE_ENV_VARS='DYNACONF_USER_PROVIDER__rbac_enabled=false,foo=bar'"
+      default: ""
     - name: IQE_SELENIUM
       type: string
       description: "true -- whether to run IQE pod with a selenium container, default is false"
@@ -239,6 +243,8 @@ spec:
           value: "$(params.IQE_CJI_TIMEOUT)"
         - name: IQE_ENV
           value: "$(params.IQE_ENV)"
+        - name: IQE_ENV_VARS
+          value: "$(params.IQE_ENV_VARS)"
         - name: IQE_SELENIUM
           value: "$(params.IQE_SELENIUM)"
         - name: IQE_PARALLEL_ENABLED
