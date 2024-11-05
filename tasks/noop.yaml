@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: noop
+spec:
+  steps:
+    - name: noop-preparation
+      image: ubuntu
+      command: [echo]
+      args: ["No preparation step needed"]
