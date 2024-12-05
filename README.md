@@ -81,6 +81,8 @@ spec:
       value: # Ibutsu source for the current run. Default is "".
     - name: DEPLOY_TIMEOUT
       value: # Deploy timeout. Default is "900"
+    - name: DEPLOY_OPTIONAL_DEPS_METHOD
+      value: # Dependecy processing method (https://github.com/redhatinsights/bonfire?tab=readme-ov-file#dependency-processing). Default is "hybrid"
     - name: IQE_IMAGE_TAG
       value: # The IQE image used to run tests. Default is "".
 ```

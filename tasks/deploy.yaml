@@ -53,6 +53,10 @@ spec:
       type: string
       description: "Deploy timeout"
       default: "900"
+    - name: OPTIONAL_DEPS_METHOD
+      type: string
+      description: "Method to install optional dependencies - see bonfire docs"
+      default: "hybrid"
   steps:
     - name: deploy-application
       image: "$(params.BONFIRE_IMAGE)"
