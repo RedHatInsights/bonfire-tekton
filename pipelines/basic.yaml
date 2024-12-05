@@ -128,6 +128,10 @@ spec:
       type: string
       description: "Deploy timeout"
       default: "900"
+    - name: DEPLOY_OPTIONAL_DEPS_METHOD
+      type: string
+      description: "Method to deploy optional dependencies - see bonfire docs https://github.com/redhatinsights/bonfire?tab=readme-ov-file#dependency-processing"
+      default: "hybrid"
     - name: IQE_IMAGE_TAG
       type: string
       description: "Tag of the iqe image to run tests from"
@@ -202,6 +206,8 @@ spec:
           value: "$(params.DEPLOY_FRONTENDS)"
         - name: DEPLOY_TIMEOUT
           value: "$(params.DEPLOY_TIMEOUT)"
+        - name: OPTIONAL_DEPS_METHOD
+          value: "$(params.DEPLOY_OPTIONAL_DEPS_METHOD)"
       runAfter:
         - reserve-namespace
       taskRef:
