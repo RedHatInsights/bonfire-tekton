@@ -132,6 +132,10 @@ spec:
       type: string
       description: "Tag of the iqe image to run tests from"
       default: ""
+    - name: CUSTOM_PREPARATION_TASK_NAME
+      type: string
+      description: "Custom preparation task to run before running the tests"
+      default: "noop"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -213,6 +217,27 @@ spec:
             value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
+    - name: custom-preparation
+      params:
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/$(params.CUSTOM_PREPARATION_TASK_NAME).yaml
+      runAfter:
+        - deploy-application
     - name: run-iqe-cji
       params:
         - name: BONFIRE_IMAGE
@@ -245,6 +270,8 @@ spec:
           value: "$(params.IQE_ENV)"
         - name: IQE_ENV_VARS
           value: "$(params.IQE_ENV_VARS)"
+        - name: IQE_ENV_VARS_SUBSTITUTE
+          value: "$(tasks.custom-preparation.results.iqe-additional-env-vars)"
         - name: IQE_SELENIUM
           value: "$(params.IQE_SELENIUM)"
         - name: IQE_PARALLEL_ENABLED
@@ -259,6 +286,7 @@ spec:
           value: "$(params.IQE_IMAGE_TAG)"
       runAfter:
         - deploy-application
+        - custom-preparation
       taskRef:
         resolver: git
         params:
