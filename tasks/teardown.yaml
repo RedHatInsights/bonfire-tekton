@@ -87,7 +87,7 @@ spec:
         set -ex
 
         echo "Copying files to S3"
-        ./upload-to-s3.sh | tee "$(results.ARTIFACTS_URL.path)"
+        upload-to-s3.sh | tee "$(results.ARTIFACTS_URL.path)"
 
     - name: release-namespace
       image: "$(params.BONFIRE_IMAGE)"
