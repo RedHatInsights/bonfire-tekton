@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:bb80105
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a128bcd
     - name: NS
       type: string
       description: Namespace name to release
@@ -87,7 +87,7 @@ spec:
         set -ex
 
         echo "Copying files to S3"
-        ./upload-to-s3.sh | tee "$(results.ARTIFACTS_URL.path)"
+        upload-to-s3.sh | tee "$(results.ARTIFACTS_URL.path)"
 
     - name: release-namespace
       image: "$(params.BONFIRE_IMAGE)"
