@@ -81,28 +81,6 @@ spec:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
       value: $(finally.teardown.results.ARTIFACTS_URL)
-  finally:
-    - name: teardown
-      params:
-        - name: NS
-          value: "$(tasks.reserve-namespace.results.NS)"
-        - name: NS_REQUESTER
-          value: "$(context.pipelineRun.name)"
-        - name: ARTIFACTS_KEY
-          value: "$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
-        - name: AWS_SECRET
-          value: "$(params.AWS_SECRET)"
-        - name: BONFIRE_IMAGE
-          value: "$(params.BONFIRE_IMAGE)"
-      taskRef:
-        resolver: git
-        params:
-          - name: url
-            value: "$(params.URL)"
-          - name: revision
-            value: "$(params.REVISION)"
-          - name: pathInRepo
-            value: tasks/teardown.yaml
   tasks:
     - name: reserve-namespace
       params:
