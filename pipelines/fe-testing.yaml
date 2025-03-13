@@ -77,10 +77,6 @@ spec:
       type: string
       description: "Method to deploy optional dependencies - see bonfire docs https://github.com/redhatinsights/bonfire?tab=readme-ov-file#dependency-processing"
       default: "hybrid"
-  results:
-    - name: ARTIFACTS_URL
-      description: URL for the test's artifacts
-      value: $(finally.teardown.results.ARTIFACTS_URL)
   tasks:
     - name: reserve-namespace
       params:
