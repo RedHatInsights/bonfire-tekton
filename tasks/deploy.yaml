@@ -9,9 +9,23 @@ spec:
       type: string
       description: The container Bonfire image to use for the tekton tasks
       default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a128bcd
+    - name: HOMEDIR
+      type: string
+      description: Value for the HOME environment variable.
+      default: /tekton/home
     - name: SNAPSHOT
       type: string
       description: "AppStudio snapshot (see example above)"
+    - name: SINGLE_COMPONENT
+      description: Reduce the Snapshot to only the component whose build caused the Snapshot to be created
+      type: string
+      default: "false"
+    - name: SINGLE_COMPONENT_CUSTOM_RESOURCE
+      description: >
+        Name, including kind, of the Kubernetes resource to query for labels when single
+        component mode is enabled, e.g. pr/somepipeline.
+      type: string
+      default: "unknown"
     - name: APP_INTERFACE_SECRET
       type: string
       default: app-interface
@@ -58,6 +72,23 @@ spec:
       description: "Method to install optional dependencies - see bonfire docs"
       default: "hybrid"
   steps:
+    # A hack to reduce the snapshot to a single component
+    # Copied from https://github.com/enterprise-contract/ec-cli/blob/27a1c5725e864756c582e716c839ae53751aff0f/tasks/verify-conforma-konflux-ta/0.1/verify-conforma-konflux-ta.yaml#L205
+    - name: reduce
+      env:
+        - name: SNAPSHOT
+          value: $(params.SNAPSHOT)
+        - name: SINGLE_COMPONENT
+          value: $(params.SINGLE_COMPONENT)
+        - name: CUSTOM_RESOURCE
+          value: $(params.SINGLE_COMPONENT_CUSTOM_RESOURCE)
+        - name: CUSTOM_RESOURCE_NAMESPACE
+          value: ""
+        - name: SNAPSHOT_PATH
+          value: /workspace/snapshot.json
+      image: quay.io/enterprise-contract/ec-cli:snapshot
+      onError: continue # progress even if the step fails so we can see the debug logs
+      command: [reduce-snapshot.sh]
     - name: deploy-application
       image: "$(params.BONFIRE_IMAGE)"
       env:
@@ -111,6 +142,8 @@ spec:
 
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
+
+        SNAPSHOT="$(cat "${SNAPSHOT}" 2> /dev/null || echo "${SNAPSHOT}")"
 
         echo "deploying to ephemeral"
         if [ -z "${EXTRA_DEPLOY_ARGS}" ]; then
