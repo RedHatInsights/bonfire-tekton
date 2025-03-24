@@ -41,6 +41,8 @@ spec:
       value: pipelines/basic.yaml # If you have no IQE tests, change this to pipelines/basic_no_iqe.yaml
     resolver: git
   params:
+    - name: SINGLE_COMPONENT
+      value: true # (default: false) Reduce the Snapshot to only the component whose build caused the Snapshot to be created
     - name: APP_NAME
       value: # Name of app-sre "application" folder this component lives in.
     - name: COMPONENTS
