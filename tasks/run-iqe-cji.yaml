@@ -122,13 +122,13 @@ spec:
         - name: IQE_SELENIUM
           value: $(params.IQE_SELENIUM)
         - name: IQE_PARALLEL_ENABLED
-          value: ${params.IQE_PARALLEL_ENABLED}
+          value: $(params.IQE_PARALLEL_ENABLED)
         - name: IQE_PARALLEL_WORKER_COUNT
-          value: ${params.IQE_PARALLEL_WORKER_COUNT}
+          value: $(params.IQE_PARALLEL_WORKER_COUNT)
         - name: IQE_RP_ARGS
-          value: ${params.IQE_RP_ARGS}
+          value: $(params.IQE_RP_ARGS)
         - name: IQE_IBUTSU_SOURCE
-          value: ${params.IQE_IBUTSU_SOURCE}
+          value: $(params.IQE_IBUTSU_SOURCE)
         - name: BONFIRE_BOT
           value: "true"
         - name: IQE_IMAGE_TAG
