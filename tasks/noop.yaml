@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: noop
+spec:
+  results:
+    - name: iqe-additional-env-vars
+      description: ""
+  steps:
+    - name: noop-preparation
+      image: ubuntu
+      script: |
+        #!/bin/bash
+        echo "Noop - skipping - no preparation needed"
+
+        echo -n "" > $(results.iqe-additional-env-vars.path)

@@ -1,0 +1,104 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: preparation-provisioning
+spec:
+  params:
+    - name : BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:bb80105
+    - name: CUSTOM_IMAGE
+      type: string
+      description: The container image to use for the provisioning setup task
+      default: quay.io/envision/provisioning-cicd:latest
+    - name: NS
+      type: string
+      description: Namespace name to deploy the application to
+    - name: NS_REQUESTER
+      type: string
+      description: The name of the person/pipeline that requested the namespace
+    - name: EPHEMERAL_ENV_PROVIDER_SECRET
+      type: string
+      default: ephemeral-env-provider
+      description: "Secret for connecting to ephemeral env provider cluster"
+    - name: AWS_ACCOUNT_ID_SECRET
+      type: string
+      description: Secret containing the AWS Account ID
+      default: provisioning-aws-account-id
+    - name: AZURE_TENANT_ID_SECRET
+      type: string
+      description: Secret containing the AZURE Tenant ID
+      default: provisioning-azure-secrets
+    - name: AZURE_SUBSCRIPTION_ID_SECRET
+      type: string
+      description: Secret containing the AZURE Subscription ID
+      default: provisioning-azure-secrets
+    - name: AZURE_RESOURCE_GROUP_SECRET
+      type: string
+      description: Secret containing the AZURE Resource Group
+      default: provisioning-azure-secrets
+  results:
+    - name: iqe-additional-env-vars
+      description: ""
+  steps:
+    - name: provisioning-setup
+      image: "$(params.CUSTOM_IMAGE)"
+      env:
+        - name: OC_LOGIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: token
+        - name: OC_LOGIN_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: url
+        - name: AWS_ACCOUNT_ID
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AWS_ACCOUNT_ID_SECRET)
+              key: AWS_ACCOUNT_ID
+        - name: AZURE_TENANT_ID
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AZURE_TENANT_ID_SECRET)
+              key: AZURE_TENANT_ID
+        - name: AZURE_SUBSCRIPTION_ID
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AZURE_SUBSCRIPTION_ID_SECRET)
+              key: AZURE_SUBSCRIPTION_ID
+        - name: AZURE_RESOURCE_GROUP
+          valueFrom:
+            secretKeyRef:
+              name: $(params.AZURE_RESOURCE_GROUP_SECRET)
+              key: AZURE_RESOURCE_GROUP       
+        - name: BONFIRE_BOT
+          value: "true"
+      script: |
+        #!/bin/bash
+        set -ex
+
+        echo "Running login.sh script"
+        # running login directly
+        # TODO: switch to using https://github.com/RedHatInsights/cicd-tools/blob/aea5d464a40d9ada1e03f76ff85cb6c5d0deb7e2/konflux_scripts/login.sh
+
+        echo "Login to ephemeral cluster"
+        server="${OC_LOGIN_SERVER:?OC_LOGIN_SERVER env var was not defined}"
+        token="${OC_LOGIN_TOKEN:?OC_LOGIN_SERVER env var was not defined}"
+
+        oc login --token="$token" --server="$server"
+
+        oc project "$(params.NS)"
+
+        export AWS_ACCOUNT_ID
+        export AZURE_TENANT_ID
+        export AZURE_SUBSCRIPTION_ID
+        export AZURE_RESOURCE_GROUP
+
+        source /images_db_stub.sh 
+
+        echo "Storing iqe variables to results"
+        echo -n "$IQE_ENV_VARS" > $(results.iqe-additional-env-vars.path)

@@ -59,6 +59,10 @@ spec:
       type: string
       description: "Comma delimited string with additional values, such as IQE_ENV_VARS='DYNACONF_USER_PROVIDER__rbac_enabled=false,foo=bar'"
       default: ""
+    - name: IQE_ENV_VARS_SUBSTITUTE
+      type: string
+      description: "Comma delimited string with additional values used when IQE_ENV_VARS are empty,i.e:IQE_ENV_VARS_SUBSTITUTE='DYNACONF_ephemeral_images__aws__image_uuid=<image_uuid>"
+      default: ""
     - name: IQE_SELENIUM
       type: string
       description: "true -- whether to run IQE pod with a selenium container, default is false"
@@ -119,6 +123,8 @@ spec:
           value: $(params.IQE_ENV)
         - name: IQE_ENV_VARS
           value: $(params.IQE_ENV_VARS)
+        - name: IQE_ENV_VARS_SUBSTITUTE
+          value: $(params.IQE_ENV_VARS_SUBSTITUTE)
         - name: IQE_SELENIUM
           value: $(params.IQE_SELENIUM)
         - name: IQE_PARALLEL_ENABLED
@@ -136,6 +142,10 @@ spec:
       script: |
         #!/bin/bash
         set -ex
+
+        if [ -z "$IQE_ENV_VARS" ]; then
+          export IQE_ENV_VARS="$IQE_ENV_VARS_SUBSTITUTE"
+        fi
 
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
