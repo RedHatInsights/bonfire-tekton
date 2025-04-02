@@ -181,4 +181,4 @@ spec:
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
-            value: .tekton/tasks/run-tests.yaml
+            value: .tekton/run-tests.yaml
