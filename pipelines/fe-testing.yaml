@@ -164,6 +164,7 @@ spec:
           - name: pathInRepo
             value: tasks/deploy.yaml
     - name: run-tests
+      resolver: git
       params:
         - name: NS_REQUESTER
           value: "$(context.pipelineRun.name)"
@@ -177,8 +178,8 @@ spec:
         resolver: git
         params:
           - name: projectUrl
-            value: 'https://github.com/RedHatInsights/insights-chrome'
+            value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "$(params.REVISION)"
+            value: "add_konflux_integration_test"
           - name: pathInRepo
             value: .tekton/run-tests-task.yml
