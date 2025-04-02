@@ -79,7 +79,7 @@ spec:
       default: "hybrid"
     - name: PROJECT_URL
       type: string
-      default: ""
+      default: "default url"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
