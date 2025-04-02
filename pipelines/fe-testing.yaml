@@ -175,7 +175,6 @@ spec:
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
       taskRef:
-        resolver: git
         params:
           - name: projectUrl
             value: "$(params.PROJECT_URL)"
