@@ -177,7 +177,7 @@ spec:
         resolver: git
         params:
           - name: projectUrl
-            value: "$(params.PROJECT_URL)"
+            value: 'https://github.com/RedHatInsights/insights-chrome'
           - name: revision
             value: "$(params.REVISION)"
           - name: pathInRepo
