@@ -79,7 +79,7 @@ spec:
       default: "hybrid"
     - name: PROJECT_URL
       type: string
-      default: 'https://github.com/RedHatInsights/bonfire-tekton'
+      default: 'https://github.com/RedHatInsights/insights-chrome'
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -163,7 +163,7 @@ spec:
             value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
-    - name: run-tests
+    - name: run-tests-task
       params:
         - name: NS_REQUESTER
           value: "$(context.pipelineRun.name)"
@@ -176,7 +176,7 @@ spec:
       taskRef:
         resolver: git
         params:
-          - name: projectUrl
+          - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
             value: "add_konflux_integration_test"
