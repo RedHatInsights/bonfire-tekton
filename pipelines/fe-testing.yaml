@@ -164,7 +164,6 @@ spec:
           - name: pathInRepo
             value: tasks/deploy.yaml
     - name: run-tests
-      resolver: git
       params:
         - name: NS_REQUESTER
           value: "$(context.pipelineRun.name)"
@@ -175,6 +174,7 @@ spec:
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
       taskRef:
+        resolver: git
         params:
           - name: projectUrl
             value: "$(params.PROJECT_URL)"
