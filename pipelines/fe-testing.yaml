@@ -79,7 +79,7 @@ spec:
       default: "hybrid"
     - name: PROJECT_URL
       type: string
-      default: 'https://github.com/RedHatInsights/insights-chrome'
+      description: "the git url for the project the integration test is running against"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
