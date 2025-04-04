@@ -13,7 +13,7 @@ spec:
     - name: REVISION
       type: string
       description: Git commit revision to use for fetching the tasks
-      default: main
+      default: "add_konflux_integration_test"
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
@@ -177,7 +177,7 @@ spec:
         resolver: git
         params:
           - name: url
-            value: '{{source_url}}'
+            value: "$(params.PROJECT_URL)"
           - name: revision
             value: "add_konflux_integration_test"
           - name: pathInRepo
