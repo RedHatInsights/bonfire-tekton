@@ -1,0 +1,307 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: bonfire
+  labels:
+    build.appstudio.redhat.com/pipeline: "bonfire"
+spec:
+  params:
+    - name: URL
+      type: string
+      description: URL of the Git repository use for fetching the tasks
+      default: 'https://github.com/RedHatInsights/bonfire-tekton'
+    - name: REVISION
+      type: string
+      description: Git commit revision to use for fetching the tasks
+      default: main
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a128bcd
+    - name: SNAPSHOT
+      type: string
+      description: |
+        Spec section of an ApplicationSnapshot resource. Not all fields of the
+        resource are required. A minimal example:
+          {
+            "components": [
+              {
+                "containerImage": "quay.io/example/repo:latest"
+              }
+            ]
+          }
+        Each "containerImage" in the "components" array is validated.
+    - name: SINGLE_COMPONENT
+      type: string
+      description: Reduce the Snapshot to only the component whose build caused the Snapshot to be created
+      default: "false"
+    - name: SINGLE_COMPONENT_CUSTOM_RESOURCE
+      type: string
+      description: PipelineRun ID
+      default: "pr/$(context.pipelineRun.name)"
+    - name: EPHEMERAL_ENV_PROVIDER_SECRET
+      type: string
+      default: ephemeral-env-provider
+      description: "Secret for connecting to ephemeral env provider cluster"
+    - name: APP_INTERFACE_SECRET
+      type: string
+      default: app-interface
+      description: "Secret for connecting to app-interface"
+    - name: APP_NAME
+      type: string
+      description: name of app-sre "application" folder this component lives in
+    - name: COMPONENTS
+      type: string
+      description: space-separated list of components to load
+      default: ""
+    - name: COMPONENTS_W_RESOURCES
+      type: string
+      description: component to keep
+      default: ""
+    - name: AWS_SECRET
+      type: string
+      default: rh-artifacts-bucket
+      description: Secret with connection details to S3
+    - name: BONFIRE_COMPONENT_NAME
+      type: string
+      default: ""
+      description: name of the app-sre component name
+    - name: COMPONENT_NAME
+      type: string
+      description: name of app-sre "resourceTemplate" in deploy.yaml for this component
+    - name: IQE_PLUGINS
+      type: string
+      description: name of the IQE plugin for this app.
+    - name: IQE_MARKER_EXPRESSION
+      type: string
+      description: This is the value passed to pytest -m
+      default: ""
+    - name: IQE_FILTER_EXPRESSION
+      type: string
+      description: This is the value passed to pytest -k
+      default: ""
+    - name: IQE_REQUIREMENTS
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_REQUIREMENTS_PRIORITY
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_TEST_IMPORTANCE
+      type: string
+      description: ""
+      default: ""
+    - name: IQE_CJI_TIMEOUT
+      type: string
+      description: This is the time to wait for smoke test to complete or fail
+      default: 30m
+    - name: IQE_ENV
+      type: string
+      description: "something -- value to set for ENV_FOR_DYNACONF, default is \"clowder_smoke\""
+      default: "clowder_smoke"
+    - name: IQE_ENV_VARS
+      type: string
+      description: "Comma delimited string with additional values, such as IQE_ENV_VARS='DYNACONF_USER_PROVIDER__rbac_enabled=false,foo=bar'"
+      default: ""
+    - name: IQE_SELENIUM
+      type: string
+      description: "true -- whether to run IQE pod with a selenium container, default is false"
+      default: "false"
+    - name: IQE_PARALLEL_ENABLED
+      type: string
+      description: "whether to run IQE with --parallel-enabled"
+      default: "false"
+    - name: IQE_PARALLEL_WORKER_COUNT
+      type: string
+      description: "Number of parallel workers to use"
+      default: ""
+    - name: IQE_RP_ARGS
+      type: string
+      description: "Arguments to send to reportportal"
+      default: ""
+    - name: IQE_IBUTSU_SOURCE
+      type: string
+      description: "Update the ibutsu source for the current run"
+      default: ""
+    - name: EXTRA_DEPLOY_ARGS
+      type: string
+      description: "Extra arguments for the deployment"
+      default: ""
+    - name: DEPLOY_FRONTENDS
+      type: string
+      description: "Deploy frontend in the env or not"
+      default: ""
+    - name: DEPLOY_TIMEOUT
+      type: string
+      description: "Deploy timeout"
+      default: "900"
+    - name: DEPLOY_OPTIONAL_DEPS_METHOD
+      type: string
+      description: "Method to deploy optional dependencies - see bonfire docs https://github.com/redhatinsights/bonfire?tab=readme-ov-file#dependency-processing"
+      default: "hybrid"
+    - name: IQE_IMAGE_TAG
+      type: string
+      description: "Tag of the iqe image to run tests from"
+      default: ""
+  results:
+    - name: ARTIFACTS_URL
+      description: URL for the test's artifacts
+      value: $(finally.teardown.results.ARTIFACTS_URL)
+  finally:
+    - name: teardown
+      params:
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: ARTIFACTS_KEY
+          value: "$(context.pipelineRun.namespace)/$(context.pipelineRun.name)"
+        - name: AWS_SECRET
+          value: "$(params.AWS_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/teardown.yaml
+  tasks:
+    - name: reserve-namespace
+      params:
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/reserve-namespace.yaml
+    - name: deploy-application
+      params:
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: SNAPSHOT
+          value: "$(params.SNAPSHOT)"
+        - name: SINGLE_COMPONENT
+          value: "$(params.SINGLE_COMPONENT)"
+        - name: SINGLE_COMPONENT_CUSTOM_RESOURCE
+          value: "$(params.SINGLE_COMPONENT_CUSTOM_RESOURCE)"
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: APP_INTERFACE_SECRET
+          value: "$(params.APP_INTERFACE_SECRET)"
+        - name: APP_NAME
+          value: "$(params.APP_NAME)"
+        - name: BONFIRE_COMPONENT_NAME
+          value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: COMPONENTS
+          value: "$(params.COMPONENTS)"
+        - name: COMPONENTS_W_RESOURCES
+          value: "$(params.COMPONENTS_W_RESOURCES)"
+        - name: EXTRA_DEPLOY_ARGS
+          value: "$(params.EXTRA_DEPLOY_ARGS)"
+        - name: DEPLOY_FRONTENDS
+          value: "$(params.DEPLOY_FRONTENDS)"
+        - name: DEPLOY_TIMEOUT
+          value: "$(params.DEPLOY_TIMEOUT)"
+        - name: OPTIONAL_DEPS_METHOD
+          value: "$(params.DEPLOY_OPTIONAL_DEPS_METHOD)"
+      runAfter:
+        - reserve-namespace
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/deploy.yaml
+    - name: run-iqe-cji
+      params:
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT_NAME)"
+        - name: BONFIRE_COMPONENT_NAME
+          value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: IQE_PLUGINS
+          value: "$(params.IQE_PLUGINS)"
+        - name: IQE_MARKER_EXPRESSION
+          value: "$(params.IQE_MARKER_EXPRESSION)"
+        - name: IQE_FILTER_EXPRESSION
+          value: "$(params.IQE_FILTER_EXPRESSION)"
+        - name: IQE_REQUIREMENTS
+          value: "$(params.IQE_REQUIREMENTS)"
+        - name: IQE_REQUIREMENTS_PRIORITY
+          value: "$(params.IQE_REQUIREMENTS_PRIORITY)"
+        - name: IQE_TEST_IMPORTANCE
+          value: "$(params.IQE_TEST_IMPORTANCE)"
+        - name: IQE_CJI_TIMEOUT
+          value: "$(params.IQE_CJI_TIMEOUT)"
+        - name: IQE_ENV
+          value: "$(params.IQE_ENV)"
+        - name: IQE_ENV_VARS
+          value: "$(params.IQE_ENV_VARS)"
+        - name: IQE_SELENIUM
+          value: "$(params.IQE_SELENIUM)"
+        - name: IQE_PARALLEL_ENABLED
+          value: "$(params.IQE_PARALLEL_ENABLED)"
+        - name: IQE_PARALLEL_WORKER_COUNT
+          value: "$(params.IQE_PARALLEL_WORKER_COUNT)"
+        - name: IQE_RP_ARGS
+          value: "$(params.IQE_RP_ARGS)"
+        - name: IQE_IBUTSU_SOURCE
+          value: "$(params.IQE_IBUTSU_SOURCE)"
+        - name: IQE_IMAGE_TAG
+          value: "$(params.IQE_IMAGE_TAG)"
+      runAfter:
+        - deploy-application
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/run-iqe-cji.yaml
+    - name: pytest
+      params:
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.PROJECT_URL)"
+          - name: revision
+            value: "aa_custom_pipeline"
+          - name: pathInRepo
+            value: .tekton/pytest.yaml
