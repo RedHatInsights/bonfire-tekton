@@ -1,0 +1,106 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: pytest 
+spec:
+  params:
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a128bcd
+    - name: PYTHON_TEST_IMAGE
+      type: string
+      description: The container used for running pytest test suite
+      default: "" 
+  results:
+    - name: NS
+      description: ""
+  steps:
+    - name: pytest 
+      image: "$(params.PYTHON_TEST_IMAGE)"
+      env:
+        - name: OC_LOGIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: token
+        - name: OC_LOGIN_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
+              key: url
+        - name: BONFIRE_BOT
+          value: "true"
+      script: |
+        #!/bin/bash
+        set -ex
+
+        mkdir -vp blank
+        cat > ./blank/coverage-run.sh <<EOF
+        #!/bin/bash -x
+
+        set -x
+        set -e
+
+        MINIO_HOST=\$(export | grep MINIO_SERVICE_HOST | awk -F\\" '{print \$2}')
+        MINIO_PORT=\$(export | grep MINIO_SERVICE_PORT_MINIO | awk -F\\" '{print \$2}')
+
+        curl https://dl.min.io/client/mc/release/linux-amd64/mc --create-dirs -o /tmp/mc
+        chmod +x /tmp/mc
+        export PATH=\$PATH:/tmp
+
+        mc config host rm local;
+        mc config host add --quiet --api s3v4 local http://\$MINIO_HOST:\$MINIO_PORT $MINIO_key $MINIO_secret;
+        mc mb --quiet local/analytics-prod/
+        mc policy set public local/analytics-prod;
+        mc mb --quiet local/metastore/;
+        mc policy set public local/metastore;
+        mc mb --quiet local/insights-upload-perma/;
+        mc policy set public local/insights-upload-perma;
+        mc mb --quiet local/analytics-recovery-prod/;
+        mc policy set public local/analytics-recovery-prod;
+        mc mb --quiet local/insights-upload-tower-analytics-stage/;
+        mc policy set public local/insights-upload-tower-analytics-stage;
+        mc mb --ignore-existing --quiet local/analytics-lightspeed/;
+        mc policy set public local/analytics-lightspeed;
+
+        unset LOG_LEVEL
+
+
+        export POSTGRESQL_HOST=\${AUTOMATION_ANALYTICS_DB_SERVICE_HOST}
+        export POSTGRES_DB="postgres"
+        export POSTGRESQL_USER="postgres"
+        export POSTGRESQL_PASSWORD=\$(grep -Pioh "adminPassword.*?," /cdapp/cdappconfig.json | awk -F\\" '{print \$3}')
+        export DATABASE_PREFIX="postgresql://\${POSTGRESQL_USER}:\${POSTGRESQL_PASSWORD}@\${POSTGRESQL_HOST}"
+
+
+        export S3_ENDPOINT=http://\${MINIO_HOST}:\${MINIO_PORT}
+        export MINIO_SECRET_KEY=$MINIO_secret
+        export MINIO_ACCESS_KEY=$MINIO_key
+        export MINIO_DOMAIN=\$MINIO_HOST
+
+        export DATA_EXPORT_BUCKET_NAME=insights-buck-it-ansible
+        export DATA_EXPORT_BUCKET_ENDPOINT=http://\${MINIO_HOST}:\${MINIO_PORT}
+        export DATA_EXPORT_BUCKET_ID=$MINIO_key
+        export DATA_EXPORT_BUCKET_KEY=$MINIO_secret
+        export DATA_EXPORT_ENABLED=True
+
+        export LIGHTSPEED_BUCKET_NAME=analytics-lightspeed
+        export LIGHTSPEED_BUCKET_ENDPOINT=http://\${MINIO_HOST}:\${MINIO_PORT}
+        export LIGHTSPEED_BUCKET_ID=$MINIO_key
+        export LIGHTSPEED_BUCKET_KEY=$MINIO_secret
+
+        export AAP_BILLING_CONTROLLER_SUBS_WATCH_SENDER_ENABLED=True
+
+        export
+
+        pipenv run coverage run --source=. -m pytest --junitxml=result.xml --durations=0 --ignore=test/perf/ -v test/
+        pipenv run coverage report
+        EOF
+
+        DEST=$(kubectl get pods | grep fastapi | awk '{print $1}')
+        oc rsync --no-perms=true ./blank/ $DEST:/tmp
+        kubectl exec -it $DEST -- chmod +x /tmp/coverage-run.sh
+        kubectl exec -it $DEST -- cat /tmp/coverage-run.sh
+        kubectl exec -it $DEST -- bash /tmp/coverage-run.sh
+
