@@ -158,7 +158,7 @@ spec:
         resolver: git
         params:
           - name: url
-            value: "$(params.URL)"
+            value: "$(params.PROJECT_URL)"
           - name: revision
             value: "add_konflux_integration_test"
           - name: pathInRepo
