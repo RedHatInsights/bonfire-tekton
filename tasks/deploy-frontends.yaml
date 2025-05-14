@@ -57,6 +57,13 @@ spec:
       type: string
       description: "Method to install optional dependencies - see bonfire docs"
       default: "hybrid"
+  results:
+    - name: url
+      description: The url for logging into the UI from your ephemeral environment
+    - name: username
+      description: The username for logging into the UI from your ephemeral environment
+    - name: password
+      description: The password for logging into the UI from your ephemeral environment
   steps:
     - name: deploy-application
       image: "$(params.BONFIRE_IMAGE)"

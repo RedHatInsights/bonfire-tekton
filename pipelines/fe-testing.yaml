@@ -173,6 +173,14 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
+        - name: URL
+          value: "$(task.deploy-application.results.url)"
+        - name: USERNAME
+          value: "$(task.deploy-application.results.username)"
+        - name: PASSWORD
+          value: "$(task.deploy-application.results.password)"
+      runAfter:
+        - deploy-application
       taskRef:
         resolver: git
         params:
