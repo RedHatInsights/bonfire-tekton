@@ -173,11 +173,11 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
-        - name: URL
+        - name: EPHEMERAL_ENV_URL
           value: "$(task.deploy-application.results.url)"
-        - name: USERNAME
+        - name: EPHEMERAL_ENV_USERNAME
           value: "$(task.deploy-application.results.username)"
-        - name: PASSWORD
+        - name: EPHEMERAL_ENV_PASSWORD
           value: "$(task.deploy-application.results.password)"
       runAfter:
         - deploy-application
