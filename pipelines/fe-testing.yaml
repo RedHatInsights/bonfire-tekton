@@ -160,7 +160,7 @@ spec:
           - name: url
             value: "$(params.URL)"
           - name: revision
-            value: "$(params.REVISION)"
+            value: "add_konflux_integration_test"
           - name: pathInRepo
             value: tasks/deploy-frontends.yaml
     - name: run-tests-task
