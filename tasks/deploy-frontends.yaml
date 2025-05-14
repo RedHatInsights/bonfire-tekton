@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: deploy
+  name: deploy-frontends
 spec:
   params:
     - name: BONFIRE_IMAGE
