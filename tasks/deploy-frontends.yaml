@@ -128,6 +128,6 @@ spec:
         export EXTRA_DEPLOY_ARGS
         deploy.sh "$(params.NS)" "$(params.NS_REQUESTER)" 
 
-        oc get frontendenvironment "env-$(params.NS)" -n "$(params.NS)" -o=jsonpath='{.spec.hostname}' | tee "$(results.ephemeral-env-url)"
-        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultUsername}' | base64 --decode | tee "$(results.ephemeral-env-username)"
-        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultPassword}' | base64 --decode | tee "$(results.ephemeral-env-password)"
+        oc get frontendenvironment "env-$(params.NS)" -n "$(params.NS)" -o=jsonpath='{.spec.hostname}' | tee $(results.ephemeral-env-url.path)
+        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultUsername}' | base64 --decode | tee $(results.ephemeral-env-username.path)
+        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultPassword}' | base64 --decode | tee $(results.ephemeral-env-password.path)
