@@ -58,11 +58,11 @@ spec:
       description: "Method to install optional dependencies - see bonfire docs"
       default: "hybrid"
   results:
-    - name: url
+    - name: ephemeral-env-url
       description: The url for logging into the UI from your ephemeral environment
-    - name: username
+    - name: ephemeral-env-username
       description: The username for logging into the UI from your ephemeral environment
-    - name: password
+    - name: ephemeral-env-password
       description: The password for logging into the UI from your ephemeral environment
   steps:
     - name: deploy-application
@@ -128,6 +128,6 @@ spec:
         export EXTRA_DEPLOY_ARGS
         deploy.sh "$(params.NS)" "$(params.NS_REQUESTER)" 
 
-        oc get frontendenvironment "env-$(params.NS)" -n "$(params.NS)" -o=jsonpath='{.spec.hostname}' | tee $(results.url)
-        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultUsername}' | base64 --decode | tee $(results.username)
-        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultPassword}' | base64 --decode | tee $(results.password) 
+        oc get frontendenvironment "env-$(params.NS)" -n "$(params.NS)" -o=jsonpath='{.spec.hostname}' | tee $(results.ephemeral-env-url)
+        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultUsername}' | base64 --decode | tee $(results.ephemeral-env-username)
+        oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultPassword}' | base64 --decode | tee $(results.ephemeral-env-password) 

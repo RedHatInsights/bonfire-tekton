@@ -160,9 +160,9 @@ spec:
           - name: url
             value: "$(params.URL)"
           - name: revision
-            value: "$(params.REVISION)"
+            value: fe_testing_pipeline
           - name: pathInRepo
-            value: tasks/deploy.yaml
+            value: tasks/deploy-frontends.yaml
     - name: run-tests-task
       params:
         - name: NS_REQUESTER
@@ -174,11 +174,11 @@ spec:
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
         - name: EPHEMERAL_ENV_URL
-          value: "$(task.deploy-application.results.url)"
+          value: "$(task.deploy-application.results.ephemeral-env-url)"
         - name: EPHEMERAL_ENV_USERNAME
-          value: "$(task.deploy-application.results.username)"
+          value: "$(task.deploy-application.results.ephemeral-env-username)"
         - name: EPHEMERAL_ENV_PASSWORD
-          value: "$(task.deploy-application.results.password)"
+          value: "$(task.deploy-application.results.ephemeral-env-password)"
       runAfter:
         - deploy-application
       taskRef:
