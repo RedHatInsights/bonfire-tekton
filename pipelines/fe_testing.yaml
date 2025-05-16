@@ -68,7 +68,7 @@ spec:
     - name: DEPLOY_FRONTENDS
       type: string
       description: "Deploy frontend in the env or not"
-      default: ""
+      default: true
     - name: DEPLOY_TIMEOUT
       type: string
       description: "Deploy timeout"
