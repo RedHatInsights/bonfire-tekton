@@ -1,6 +1,6 @@
 # Integration Test Pipelines
 
-Follow the instructions [here](https://github.com/RedHatInsights/bonfire-tekton?tab=readme-ov-file#add-the-integration-test-scenario-to-your-application) for getting setup with one of the following integration test pipelines and then configure it to use one of the pipelines on this page.  
+Follow the instructions [here](https://github.com/RedHatInsights/bonfire-tekton?tab=readme-ov-file#add-the-integration-test-scenario-to-your-application) to learn more about setting up integration test pipelines. Depending on your testing needs, the IntegrationTestScenario should be changed to look similar to one of the example configurations below.
 
 - [Basic](#basic)
 - [Basic with no IQE](#basic-with-no-iqe)
