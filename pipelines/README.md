@@ -24,7 +24,7 @@ TODO: Write description
 
 ### Description
 
-The frontend testing pipeline (fe_testing.yaml) allows app teams to create a custom task at the `.tekton` directory of an application's repository. [Here](https://github.com/RedHatInsights/insights-chrome/tree/master/.tekton/run-tests-tasks.yml) is an example of this custom task.
+The [frontend testing pipeline](fe_testing.yaml) is used to run a smoke test in the ephemeral environment that tests both frontend and backend components. [Here](https://github.com/RedHatInsights/insights-chrome/tree/master/.tekton/run-tests-tasks.yml) is an example of a frontend component which is using this pipeline.
 
 ### Instructions
 
