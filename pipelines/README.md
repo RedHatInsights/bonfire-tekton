@@ -1,5 +1,7 @@
 # Integration Test Pipelines
 
+Follow the instructions [here](https://github.com/RedHatInsights/bonfire-tekton?tab=readme-ov-file#add-the-integration-test-scenario-to-your-application) for getting setup with one of the following integration test pipelines and then configure it to use one of the pipelines on this page.  
+
 - [Basic](#basic)
 - [Basic with no IQE](#basic-with-no-iqe)
 - [Frontend Testing Pipeline](#frontend-testing-pipeline) 
@@ -26,7 +28,7 @@ The frontend testing pipeline (fe_testing.yaml) allows app teams to create a cus
 
 ### Instructions
 
-1. Follow the instructions here for setting up an integration test pipeline but use [this](https://github.com/RedHatInsights/bonfire-tekton?tab=readme-ov-file#add-the-integration-test-scenario-to-your-application) configuration for the FE testing pipeline: 
+1. Follow the instructions here for setting up an integration test pipeline but use the following configuration for the FE testing pipeline: 
 
 ```
 ---
