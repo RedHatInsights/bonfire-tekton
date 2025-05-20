@@ -28,7 +28,7 @@ The frontend testing pipeline (fe_testing.yaml) allows app teams to create a cus
 
 ### Instructions
 
-1. Follow the instructions here for setting up an integration test pipeline but use the following configuration for the FE testing pipeline: 
+1. Follow the instructions [here](https://github.com/RedHatInsights/bonfire-tekton/blob/main/README.md#add-the-integration-test-scenario-to-your-application) for setting up an integration test pipeline but use the following configuration for the FE testing pipeline: 
 
 ```
 ---
