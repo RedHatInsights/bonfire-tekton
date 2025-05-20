@@ -65,7 +65,7 @@ spec:
       value: "true"
 ```
 
-1. Create the test task in your Github project within the `.tekton` directory. The name of this task should be called `run-tests-task.yml` so that it gets picked up properly. [Here]([Here](https://github.com/RedHatInsights/insights-chrome/.tekton/run-tests-task.yml) is an example of this being used. The configuration should look like this in your file:
+1. Create the test task in your Github project within the `.tekton` directory. The name of this task should be called `run-tests-task.yml` so that it gets picked up properly. [Here](https://github.com/RedHatInsights/insights-chrome/.tekton/run-tests-task.yml) is an example of this being used. The configuration should look like this in your file:
 
 ```
 apiVersion: tekton.dev/v1beta1
