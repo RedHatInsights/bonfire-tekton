@@ -305,3 +305,22 @@ spec:
             value: "aa_custom_pipeline"
           - name: pathInRepo
             value: .tekton/pytest.yaml
+    - name: python-benchmark-testing
+      params:
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.PROJECT_URL)"
+          - name: revision
+            value: "aa_custom_pipeline"
+          - name: pathInRepo
+            value: .tekton/python-benchmark-testing.yaml

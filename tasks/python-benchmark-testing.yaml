@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: pytest 
+  name: python-benchmark-testing
 spec:
   params:
     - name: BONFIRE_IMAGE
@@ -16,7 +16,7 @@ spec:
     - name: NS
       description: ""
   steps:
-    - name: pytest 
+    - name: python-benchmark-testing
       image: "$(params.PYTHON_TEST_IMAGE)"
       env:
         - name: OC_LOGIN_TOKEN
@@ -35,5 +35,5 @@ spec:
         #!/bin/bash
         set -ex
 
-        echo "<-- write pytest tests -->"
+        echo "<-- write python benchmark testing -->"
 
