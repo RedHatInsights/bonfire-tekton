@@ -309,7 +309,7 @@ spec:
           - name: revision
             value: "aa_custom_pipeline"
           - name: pathInRepo
-            value: .tekton/pytest.yaml
+            value: tasks/pytest.yaml
     - name: python-benchmark-testing
       params:
         - name: NS_REQUESTER
@@ -328,4 +328,4 @@ spec:
           - name: revision
             value: "aa_custom_pipeline"
           - name: pathInRepo
-            value: .tekton/python-benchmark-testing.yaml
+            value: tasks/python-benchmark-testing.yaml
