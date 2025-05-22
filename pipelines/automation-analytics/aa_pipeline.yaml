@@ -299,6 +299,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
+      runAfter:
+        - deploy-application
       taskRef:
         resolver: git
         params:
@@ -316,6 +318,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
+      runAfter:
+        - deploy-application
       taskRef:
         resolver: git
         params:
