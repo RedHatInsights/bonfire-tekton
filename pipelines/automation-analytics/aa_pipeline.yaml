@@ -144,6 +144,10 @@ spec:
       type: string
       description: "Tag of the iqe image to run tests from"
       default: ""
+    - name: PROJECT_URL
+      type: string
+      description: "name of the project"
+      default: ""
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
