@@ -11,10 +11,7 @@ spec:
     - name: PYTHON_TEST_IMAGE
       type: string
       description: The container used for running pytest test suite
-      default: "" 
-  results:
-    - name: NS
-      description: ""
+      default: "registry.access.redhat.com/ubi8/python-311:1-91.1747189115" 
   steps:
     - name: pytest 
       image: "$(params.PYTHON_TEST_IMAGE)"
