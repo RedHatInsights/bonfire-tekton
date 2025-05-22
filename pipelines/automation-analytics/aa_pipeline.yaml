@@ -64,7 +64,7 @@ spec:
       description: Secret with connection details to S3
     - name: BONFIRE_COMPONENT_NAME
       type: string
-      default: ""
+      default: "tower-analytics-clowdapp"
       description: name of the app-sre component name
     - name: COMPONENT_NAME
       type: string
