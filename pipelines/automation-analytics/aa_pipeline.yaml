@@ -140,7 +140,7 @@ spec:
     - name: DEPLOY_OPTIONAL_DEPS_METHOD
       type: string
       description: "Method to deploy optional dependencies - see bonfire docs https://github.com/redhatinsights/bonfire?tab=readme-ov-file#dependency-processing"
-      default: "hybrid"
+      default: "none"
     - name: IQE_IMAGE_TAG
       type: string
       description: "Tag of the iqe image to run tests from"
