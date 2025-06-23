@@ -305,11 +305,11 @@ spec:
         resolver: git
         params:
           - name: url
-            value: "$(params.URL)"
+            value: "$(params.PROJECT_URL)"
           - name: revision
             value: "aa_custom_pipeline"
           - name: pathInRepo
-            value: tasks/pytest.yaml
+            value: .tekton/pytest.yaml
     - name: python-benchmark-testing
       params:
         - name: NS_REQUESTER
@@ -324,8 +324,8 @@ spec:
         resolver: git
         params:
           - name: url
-            value: "$(params.URL)"
+            value: "$(params.PROJECT_URL)"
           - name: revision
             value: "aa_custom_pipeline"
           - name: pathInRepo
-            value: tasks/python-benchmark-testing.yaml
+            value: .tekton/python-benchmark-testing.yaml
