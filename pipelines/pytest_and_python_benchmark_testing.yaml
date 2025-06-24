@@ -326,6 +326,6 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "aa_custom_pipeline"
+            value: "$(params.REVISION)"
           - name: pathInRepo
             value: .tekton/python-benchmark-testing.yaml
