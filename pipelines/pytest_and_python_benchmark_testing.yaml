@@ -299,6 +299,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
       runAfter:
         - deploy-application
       taskRef:
@@ -318,6 +320,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
       runAfter:
         - deploy-application
       taskRef:
@@ -326,6 +330,6 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main"
+            value: main
           - name: pathInRepo
             value: .tekton/python-benchmark-testing.yaml
