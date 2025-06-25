@@ -309,7 +309,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "$(params.REVISION)"
+            value: 3ed327294d54a9a0fc2d955c2bb7e89c338e723d
           - name: pathInRepo
             value: .tekton/pytest.yaml
     - name: python-benchmark-testing
@@ -330,6 +330,6 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "$(params.REVISION)"
+            value: 3ed327294d54a9a0fc2d955c2bb7e89c338e723d
           - name: pathInRepo
             value: .tekton/python-benchmark-testing.yaml
