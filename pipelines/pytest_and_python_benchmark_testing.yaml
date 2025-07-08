@@ -293,6 +293,8 @@ spec:
             value: tasks/run-iqe-cji.yaml
     - name: pytest
       params:
+        - name: NS
+          value: "$(TASKS.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "$(context.pipelineRun.name)"
         - name: EPHEMERAL_ENV_PROVIDER_SECRET
@@ -314,6 +316,8 @@ spec:
             value: .tekton/pytest.yaml
     - name: python-benchmark-testing
       params:
+        - name: NS
+          value: "$(TASKS.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "$(context.pipelineRun.name)"
         - name: EPHEMERAL_ENV_PROVIDER_SECRET
