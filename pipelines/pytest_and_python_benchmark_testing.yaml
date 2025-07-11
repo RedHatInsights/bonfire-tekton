@@ -236,61 +236,29 @@ spec:
             value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
-    - name: run-iqe-cji
+    - name: iqe-testing
       params:
-        - name: BONFIRE_IMAGE
-          value: "$(params.BONFIRE_IMAGE)"
         - name: NS
           value: "$(tasks.reserve-namespace.results.NS)"
         - name: NS_REQUESTER
           value: "$(context.pipelineRun.name)"
         - name: EPHEMERAL_ENV_PROVIDER_SECRET
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
-        - name: COMPONENT_NAME
-          value: "$(params.COMPONENT_NAME)"
-        - name: BONFIRE_COMPONENT_NAME
-          value: "$(params.BONFIRE_COMPONENT_NAME)"
-        - name: IQE_PLUGINS
-          value: "$(params.IQE_PLUGINS)"
-        - name: IQE_MARKER_EXPRESSION
-          value: "$(params.IQE_MARKER_EXPRESSION)"
-        - name: IQE_FILTER_EXPRESSION
-          value: "$(params.IQE_FILTER_EXPRESSION)"
-        - name: IQE_REQUIREMENTS
-          value: "$(params.IQE_REQUIREMENTS)"
-        - name: IQE_REQUIREMENTS_PRIORITY
-          value: "$(params.IQE_REQUIREMENTS_PRIORITY)"
-        - name: IQE_TEST_IMPORTANCE
-          value: "$(params.IQE_TEST_IMPORTANCE)"
-        - name: IQE_CJI_TIMEOUT
-          value: "$(params.IQE_CJI_TIMEOUT)"
-        - name: IQE_ENV
-          value: "$(params.IQE_ENV)"
-        - name: IQE_ENV_VARS
-          value: "$(params.IQE_ENV_VARS)"
-        - name: IQE_SELENIUM
-          value: "$(params.IQE_SELENIUM)"
-        - name: IQE_PARALLEL_ENABLED
-          value: "$(params.IQE_PARALLEL_ENABLED)"
-        - name: IQE_PARALLEL_WORKER_COUNT
-          value: "$(params.IQE_PARALLEL_WORKER_COUNT)"
-        - name: IQE_RP_ARGS
-          value: "$(params.IQE_RP_ARGS)"
-        - name: IQE_IBUTSU_SOURCE
-          value: "$(params.IQE_IBUTSU_SOURCE)"
-        - name: IQE_IMAGE_TAG
-          value: "$(params.IQE_IMAGE_TAG)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
       runAfter:
         - deploy-application
       taskRef:
         resolver: git
         params:
           - name: url
-            value: "$(params.URL)"
+            value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "$(params.REVISION)"
+            value: "main"
           - name: pathInRepo
-            value: tasks/run-iqe-cji.yaml
+            value: .tekton/iqe-testing.yaml
     - name: pytest
       params:
         - name: NS
