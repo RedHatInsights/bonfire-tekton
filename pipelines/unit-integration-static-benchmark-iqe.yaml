@@ -236,7 +236,7 @@ spec:
             value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/deploy.yaml
-    - name: iqe-testing
+    - name: iqe-tests
       params:
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
@@ -290,8 +290,8 @@ spec:
           - name: revision
             value: "main" 
           - name: pathInRepo
-            value: .tekton/iqe-testing.yaml
-    - name: pytest
+            value: .tekton/iqe-tests.yaml
+    - name: unit-tests
       params:
         - name: NS
           value: "$(tasks.reserve-namespace.results.NS)"
@@ -313,8 +313,31 @@ spec:
           - name: revision
             value: "main" 
           - name: pathInRepo
-            value: .tekton/pytest.yaml
-    - name: python-benchmark-testing
+            value: .tekton/unit-tests.yaml
+    - name: integration-tests
+      params:
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
+      runAfter:
+        - deploy-application
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.PROJECT_URL)"
+          - name: revision
+            value: "main" 
+          - name: pathInRepo
+            value: .tekton/integretion-tests.yaml
+    - name: benchmark-tests
       params:
         - name: NS
           value: "$(tasks.reserve-namespace.results.NS)"
@@ -336,4 +359,27 @@ spec:
           - name: revision
             value: "main"
           - name: pathInRepo
-            value: .tekton/python-benchmark-testing.yaml
+            value: .tekton/benchmark-tests.yaml
+    - name: static-tests
+      params:
+        - name: NS
+          value: "$(tasks.reserve-namespace.results.NS)"
+        - name: NS_REQUESTER
+          value: "$(context.pipelineRun.name)"
+        - name: EPHEMERAL_ENV_PROVIDER_SECRET
+          value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
+      runAfter:
+        - deploy-application
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.PROJECT_URL)"
+          - name: revision
+            value: "main"
+          - name: pathInRepo
+            value: .tekton/static-tests.yaml
