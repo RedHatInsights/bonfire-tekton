@@ -187,6 +187,6 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "add_konflux_integration_test"
+            value: "master"
           - name: pathInRepo
             value: .tekton/run-tests-task.yml
