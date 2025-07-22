@@ -31,7 +31,11 @@ spec:
       description: name of app-sre "application" folder this component lives in
     - name: BONFIRE_COMPONENT_NAME
       type: string
-      description: name of the app-sre component name
+      description: name of the app-sre component name (deprecated, use BONFIRE_COMPONENTS_MAPPING)
+      default: ""
+    - name: BONFIRE_COMPONENTS_MAPPING
+      type: string
+      description: mapping of konflux component names to bonfire component names
       default: ""
     - name: COMPONENTS
       type: string
@@ -97,6 +101,8 @@ spec:
           value: $(params.APP_NAME)
         - name: BONFIRE_COMPONENT_NAME
           value: $(params.BONFIRE_COMPONENT_NAME)
+        - name: BONFIRE_COMPONENTS_MAPPING
+          value: $(params.BONFIRE_COMPONENTS_MAPPING)
         - name: COMPONENTS
           value: $(params.COMPONENTS)
         - name: COMPONENTS_W_RESOURCES
@@ -126,7 +132,7 @@ spec:
           EXTRA_DEPLOY_ARGS+=" $(parse-snapshot.py) "
         fi
         export EXTRA_DEPLOY_ARGS
-        deploy.sh "$(params.NS)" "$(params.NS_REQUESTER)" 
+        deploy.sh "$(params.NS)" "$(params.NS_REQUESTER)"
 
         oc get frontendenvironment "env-$(params.NS)" -n "$(params.NS)" -o=jsonpath='{.spec.hostname}' | tee $(results.ephemeral-env-url.path)
         oc get secret "env-$(params.NS)-keycloak" -n "$(params.NS)" -o=jsonpath='{.data.defaultUsername}' | base64 --decode | tee $(results.ephemeral-env-username.path)
