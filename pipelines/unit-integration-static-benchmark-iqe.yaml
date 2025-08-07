@@ -280,6 +280,8 @@ spec:
           value: "$(params.IQE_IBUTSU_SOURCE)"
         - name: IQE_IMAGE_TAG
           value: "$(params.IQE_IMAGE_TAG)"
+        - name: PIPELINE_RUN_NAME
+          value: "$(context.pipelineRun.name)"
       runAfter:
         - deploy-application
       taskRef:
@@ -303,6 +305,8 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
+        - name: PIPELINE_RUN_NAME
+          value: "$(context.pipelineRun.name)"
       runAfter:
         - deploy-application
       taskRef:
@@ -326,6 +330,8 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
+        - name: PIPELINE_RUN_NAME
+          value: "$(context.pipelineRun.name)"
       runAfter:
         - deploy-application
       taskRef:
@@ -349,6 +355,8 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
+        - name: PIPELINE_RUN_NAME
+          value: "$(context.pipelineRun.name)"
       runAfter:
         - deploy-application
       taskRef:
@@ -372,6 +380,8 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
+        - name: PIPELINE_RUN_NAME
+          value: "$(context.pipelineRun.name)"
       runAfter:
         - deploy-application
       taskRef:
