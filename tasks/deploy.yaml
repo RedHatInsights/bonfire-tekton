@@ -86,6 +86,8 @@ spec:
           value: ""
         - name: SNAPSHOT_PATH
           value: /workspace/snapshot.json
+        - name: HOME
+          value: "$(params.HOMEDIR)"
       image: quay.io/enterprise-contract/ec-cli:snapshot
       onError: continue # progress even if the step fails so we can see the debug logs
       command: [reduce-snapshot.sh]
