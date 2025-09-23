@@ -75,10 +75,14 @@ spec:
       type: string
       description: "Arguments to send to reportportal"
       default: ""
-    - name: IQE_IBUTSU_SOURCE
+    - name: IBUTSU_SOURCE
       type: string
       description: "Update the ibutsu source for the current run"
       default: ""
+    - name: IBUTSU_MODE
+      type: string
+      description: "Update the ibutsu mode for the current run"
+      default: "archive"
     - name: IQE_IMAGE_TAG
       type: string
       description: "Tag of the IQE image to be used"
@@ -127,8 +131,10 @@ spec:
           value: $(params.IQE_PARALLEL_WORKER_COUNT)
         - name: IQE_RP_ARGS
           value: $(params.IQE_RP_ARGS)
-        - name: IQE_IBUTSU_SOURCE
-          value: $(params.IQE_IBUTSU_SOURCE)
+        - name: IBUTSU_SOURCE
+          value: $(params.IBUTSU_SOURCE)
+        - name: IBUTSU_MODE
+          value: $(params.IBUTSU_MODE)
         - name: BONFIRE_BOT
           value: "true"
         - name: IQE_IMAGE_TAG

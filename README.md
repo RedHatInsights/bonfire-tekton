@@ -79,8 +79,10 @@ spec:
       value: # The number of parallel workers to use. Default is "".
     - name: IQE_RP_ARGS
       value: # Arguments to send to reportportal. Default is "".
-    - name: IQE_IBUTSU_SOURCE
+    - name: IBUTSU_SOURCE
       value: # Ibutsu source for the current run. Default is "".
+    - name: IBUTSU_MODE
+      value: # Ibutsu mode for the current run. Default is "archive".
     - name: DEPLOY_TIMEOUT
       value: # Deploy timeout. Default is "900"
     - name: DEPLOY_OPTIONAL_DEPS_METHOD
