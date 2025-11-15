@@ -87,9 +87,22 @@ spec:
       type: string
       description: "Tag of the IQE image to be used"
       default: ""
+    - name: USE_LOCAL_PLUGIN
+      type: string
+      description: "Set to 'true' to install IQE plugin from the component's source repository"
+      default: "false"
+    - name: LOCAL_PLUGIN_FOLDER
+      type: string
+      description: "Folder within the component repository containing the IQE plugin (e.g., 'iqe-plugin')"
+      default: ""
+  workspaces:
+    - name: source
+      description: Source code of the component being tested (optional, required when USE_LOCAL_PLUGIN is true)
+      optional: true
   steps:
     - name: deploy-iqe-cji
       image: "$(params.BONFIRE_IMAGE)"
+      workingDir: /workspace
       env:
         - name: OC_LOGIN_TOKEN
           valueFrom:
@@ -139,6 +152,10 @@ spec:
           value: "true"
         - name: IQE_IMAGE_TAG
           value: $(params.IQE_IMAGE_TAG)
+        - name: USE_LOCAL_PLUGIN
+          value: $(params.USE_LOCAL_PLUGIN)
+        - name: LOCAL_PLUGIN_FOLDER
+          value: $(params.LOCAL_PLUGIN_FOLDER)
       script: |
         #!/bin/bash
         set -ex
@@ -146,5 +163,125 @@ spec:
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
 
-        echo "Deploying the IQE CJI test"
-        deploy-iqe-cji.sh "$(params.NS)" "$(params.NS_REQUESTER)"
+        if [ "$USE_LOCAL_PLUGIN" = "true" ]; then
+          echo "========================================================"
+          echo "Running CJI tests with local IQE plugin"
+          echo "========================================================"
+
+          if [ -z "$LOCAL_PLUGIN_FOLDER" ]; then
+            echo "ERROR: LOCAL_PLUGIN_FOLDER must be set when USE_LOCAL_PLUGIN is true"
+            exit 1
+          fi
+
+          PLUGIN_SOURCE_PATH="/workspace/source/$LOCAL_PLUGIN_FOLDER"
+          if [ ! -d "$PLUGIN_SOURCE_PATH" ]; then
+            echo "ERROR: Plugin folder not found at $PLUGIN_SOURCE_PATH"
+            exit 1
+          fi
+
+          echo "Deploying CJI pod with --debug-pod option..."
+          # Deploy the CJI pod with --debug-pod to prevent auto-execution
+          POD=$(bonfire deploy-iqe-cji $COMPONENT_NAME \
+              --debug-pod \
+              ${IQE_MARKER_EXPRESSION:+--marker "$IQE_MARKER_EXPRESSION"} \
+              ${IQE_FILTER_EXPRESSION:+--filter "$IQE_FILTER_EXPRESSION"} \
+              --env "$IQE_ENV" \
+              --cji-name "iqe-local-${COMPONENT_NAME}" \
+              ${IQE_PLUGINS:+--plugins "$IQE_PLUGINS"} \
+              ${IQE_IMAGE_TAG:+--image-tag "$IQE_IMAGE_TAG"} \
+              ${IQE_REQUIREMENTS:+--requirements "$IQE_REQUIREMENTS"} \
+              ${IQE_REQUIREMENTS_PRIORITY:+--requirements-priority "$IQE_REQUIREMENTS_PRIORITY"} \
+              ${IQE_TEST_IMPORTANCE:+--test-importance "$IQE_TEST_IMPORTANCE"} \
+              ${IQE_ENV_VARS:+--env-vars "$IQE_ENV_VARS"} \
+              ${IQE_SELENIUM:+--selenium "$IQE_SELENIUM"} \
+              ${IQE_PARALLEL_ENABLED:+--parallel-enabled "$IQE_PARALLEL_ENABLED"} \
+              ${IQE_PARALLEL_WORKER_COUNT:+--parallel-worker-count "$IQE_PARALLEL_WORKER_COUNT"} \
+              ${IQE_RP_ARGS:+--rp-args "$IQE_RP_ARGS"} \
+              ${IBUTSU_SOURCE:+--ibutsu-source "$IBUTSU_SOURCE"} \
+              -n "$(params.NS)" 2>&1 | grep -oP '(?<=Pod name: ).*' || echo "")
+
+          if [ -z "$POD" ]; then
+            echo "ERROR: Failed to get POD name from bonfire deploy-iqe-cji command"
+            echo "Trying alternative method to find the pod..."
+            sleep 5
+            POD=$(oc get pods -n $(params.NS) -l job-name --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1:].metadata.name}')
+
+            if [ -z "$POD" ]; then
+              echo "ERROR: Still could not find the pod"
+              exit 1
+            fi
+          fi
+
+          echo "CJI Pod: $POD"
+
+          # Wait for the pod to be ready
+          echo "Waiting for pod to be ready..."
+          oc wait --for=condition=Ready pod/$POD -n $(params.NS) --timeout=300s || {
+            echo "WARNING: Pod did not become ready in time, but continuing..."
+          }
+
+          # Give the pod a moment to fully initialize
+          sleep 10
+
+          echo "Installing setuptools_scm..."
+          oc exec -n $(params.NS) $POD -- pip install -i https://pypi.python.org/simple setuptools_scm || {
+            echo "WARNING: Failed to install setuptools_scm, continuing anyway..."
+          }
+
+          echo "Copying local IQE plugin to pod..."
+          echo "Source: $PLUGIN_SOURCE_PATH"
+
+          # Copy the local plugin directory to the pod
+          oc cp -n $(params.NS) "$PLUGIN_SOURCE_PATH" "$POD:iqe-local-plugin"
+
+          # Create a minimal git repository so setuptools-scm can detect a version
+          echo "Initializing git repo for version detection..."
+          oc exec -n $(params.NS) $POD -- bash -c "cd iqe-local-plugin && git init && git config user.email 'ci@redhat.com' && git config user.name 'CI' && git add -A && git commit -m 'local' && git tag v999.0.0"
+
+          echo "Installing local IQE plugin in the pod..."
+          oc exec -n $(params.NS) $POD -- bash -c "cd iqe-local-plugin && pip install -i https://pypi.python.org/simple -e ."
+
+          echo "Verifying plugin installation..."
+          oc exec -n $(params.NS) $POD -- iqe plugin list | grep -i "$IQE_PLUGINS" || {
+            echo "WARNING: Could not verify plugin installation"
+          }
+
+          echo "========================================================"
+          echo "Running tests with local plugin..."
+          echo "========================================================"
+
+          # Build the IQE test command
+          IQE_CMD="iqe tests plugin $IQE_PLUGINS"
+          if [ -n "$IQE_MARKER_EXPRESSION" ]; then
+            IQE_CMD="$IQE_CMD -m \"$IQE_MARKER_EXPRESSION\""
+          fi
+          if [ -n "$IQE_FILTER_EXPRESSION" ]; then
+            IQE_CMD="$IQE_CMD -k \"$IQE_FILTER_EXPRESSION\""
+          fi
+          IQE_CMD="$IQE_CMD --junitxml=/iqe_venv/iqe-junit-report.xml -o junit_suite_name=iqe"
+
+          echo "Running: $IQE_CMD"
+
+          # Run tests in the pod
+          set +e
+          oc exec -n $(params.NS) $POD -- bash -c "$IQE_CMD"
+          TEST_EXIT_CODE=$?
+          set -e
+
+          if [ $TEST_EXIT_CODE -eq 0 ]; then
+            echo "========================================================"
+            echo "Tests PASSED"
+            echo "========================================================"
+          else
+            echo "========================================================"
+            echo "Tests FAILED with exit code: $TEST_EXIT_CODE"
+            echo "========================================================"
+          fi
+
+          # The bonfire command would normally handle cleanup and reporting
+          # For now, we'll exit with the test exit code
+          exit $TEST_EXIT_CODE
+        else
+          echo "Deploying the IQE CJI test using standard approach"
+          deploy-iqe-cji.sh "$(params.NS)" "$(params.NS_REQUESTER)"
+        fi

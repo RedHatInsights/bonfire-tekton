@@ -148,6 +148,26 @@ spec:
       type: string
       description: "Tag of the iqe image to run tests from"
       default: ""
+    - name: USE_LOCAL_PLUGIN
+      type: string
+      description: "Set to 'true' to install IQE plugin from the component's source repository"
+      default: "false"
+    - name: LOCAL_PLUGIN_FOLDER
+      type: string
+      description: "Folder within the component repository containing the IQE plugin (e.g., 'iqe-host-inventory-plugin')"
+      default: ""
+    - name: COMPONENT_REPO_URL
+      type: string
+      description: "Git repository URL of the component being tested (required when USE_LOCAL_PLUGIN is true)"
+      default: ""
+    - name: COMPONENT_REPO_REVISION
+      type: string
+      description: "Git revision/branch/tag to clone (default: main)"
+      default: "main"
+  workspaces:
+    - name: shared-workspace
+      description: Workspace for cloning component source code
+      optional: true
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -192,6 +212,28 @@ spec:
             value: "$(params.REVISION)"
           - name: pathInRepo
             value: tasks/reserve-namespace.yaml
+    - name: clone-component-source
+      when:
+        - input: "$(params.USE_LOCAL_PLUGIN)"
+          operator: in
+          values: ["true"]
+      params:
+        - name: url
+          value: "$(params.COMPONENT_REPO_URL)"
+        - name: revision
+          value: "$(params.COMPONENT_REPO_REVISION)"
+        - name: deleteExisting
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      taskRef:
+        resolver: hub
+        params:
+          - name: name
+            value: git-clone
+          - name: version
+            value: "0.9"
     - name: deploy-application
       params:
         - name: BONFIRE_IMAGE
@@ -281,6 +323,13 @@ spec:
           value: "$(params.IBUTSU_MODE)"
         - name: IQE_IMAGE_TAG
           value: "$(params.IQE_IMAGE_TAG)"
+        - name: USE_LOCAL_PLUGIN
+          value: "$(params.USE_LOCAL_PLUGIN)"
+        - name: LOCAL_PLUGIN_FOLDER
+          value: "$(params.LOCAL_PLUGIN_FOLDER)"
+      workspaces:
+        - name: source
+          workspace: shared-workspace
       runAfter:
         - deploy-application
       taskRef:
