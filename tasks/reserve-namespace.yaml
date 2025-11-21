@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:d9a3964
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:602c886
     - name: NS_REQUESTER
       type: string
       description: The name of the person/pipeline that requested the namespace
@@ -15,6 +15,10 @@ spec:
       type: string
       default: ephemeral-env-provider
       description: "Secret for connecting to ephemeral env provider cluster"
+    - name: RESERVE_DURATION
+      type: string
+      description: "Duration to reserve the namespace for (e.g. 60m, 2h)"
+      default: "1h"
   results:
     - name: NS
       description: ""
@@ -34,6 +38,8 @@ spec:
               key: url
         - name: BONFIRE_BOT
           value: "true"
+        - name: RESERVE_DURATION
+          value: "$(params.RESERVE_DURATION)"
       script: |
         #!/bin/bash
         set -ex

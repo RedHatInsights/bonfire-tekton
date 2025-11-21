@@ -17,7 +17,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:d9a3964
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:602c886
     - name: SNAPSHOT
       type: string
       description: |
@@ -69,6 +69,10 @@ spec:
     - name: COMPONENT_NAME
       type: string
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
+    - name: NAMESPACE_RESERVE_DURATION
+      type: string
+      description: "Duration to reserve the namespace for (e.g. 60m, 2h)"
+      default: "1h"
     - name: EXTRA_DEPLOY_ARGS
       type: string
       description: "Extra arguments for the deployment"
@@ -120,6 +124,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
+        - name: RESERVE_DURATION
+          value: "$(params.NAMESPACE_RESERVE_DURATION)"
       taskRef:
         resolver: git
         params:
