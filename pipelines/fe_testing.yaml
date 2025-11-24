@@ -80,6 +80,14 @@ spec:
     - name: PROJECT_URL
       type: string
       description: "the git url for the project the integration test is running against"
+    - name: PROJECT_REVISION
+      type: string
+      description: "Git revision to use for fetching the test task"
+      default: "master"
+    - name: PROJECT_TEST_TASK_PATH
+      type: string
+      description: "Path to the test task file in the repository"
+      default: ".tekton/run-tests-task.yml"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -173,6 +181,10 @@ spec:
           value: "$(params.BONFIRE_IMAGE)"
         - name: PROJECT_URL
           value: "$(params.PROJECT_URL)"
+        - name: PROJECT_REVISION
+          value: "$(params.PROJECT_REVISION)"
+        - name: PROJECT_TEST_TASK_PATH
+          value: "$(params.PROJECT_TEST_TASK_PATH)"
         - name: EPHEMERAL_ENV_URL
           value: "$(task.deploy-application.results.ephemeral-env-url)"
         - name: EPHEMERAL_ENV_USERNAME
@@ -187,6 +199,6 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "master"
+            value: "$(params.PROJECT_REVISION)"
           - name: pathInRepo
-            value: .tekton/run-tests-task.yml
+            value: "$(params.PROJECT_TEST_TASK_PATH)"
