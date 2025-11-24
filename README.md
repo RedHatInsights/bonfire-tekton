@@ -50,9 +50,11 @@ spec:
     - name: COMPONENTS_W_RESOURCES
       value: # List of components to keep.
     - name: BONFIRE_COMPONENT_NAME
-      value: # Name of app-sre "resourceTemplate" in deploy.yaml for this component. If it is the same as the name in Konflux, you don't need to fill this  
+      value: # Name of app-sre "resourceTemplate" in deploy.yaml for this component. If it is the same as the name in Konflux, you don't need to fill this
     - name: COMPONENT_NAME
       value: # Name of your component name in Konflux
+    - name: NAMESPACE_RESERVE_DURATION
+      value: # (default 1h) Duration of the ephemeral namespace reservation
     - name: EXTRA_DEPLOY_ARGS
       value: # Extra arguments for the deployment
     - name: IQE_PLUGINS
@@ -100,7 +102,7 @@ resources:
   - ../../../../lib/consoledot-test-pipeline
 namespace: <your-workspace-name>-tenant
 ```
-5. Run the `build-manifests.sh`. This is script is using [Kustomize](https://kustomize.io/) to generate the Integration Test Scenario and secrets you will need to run the pipeline in the cluster. Check that the `auto-generated` directory is updated with these files. 
+5. Run the `build-manifests.sh`. This is script is using [Kustomize](https://kustomize.io/) to generate the Integration Test Scenario and secrets you will need to run the pipeline in the cluster. Check that the `auto-generated` directory is updated with these files.
 6. Commit your directory and the `auto-generated` directory.
 7. Create a PR from your fork, and ask for approval in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
 
@@ -114,6 +116,6 @@ If you have no IQE tests, ensure that your `IQE_PLUGINS` value is set to `""`. Y
 
 If you need to add new tasks in between the ones already in the pipeline, remove or edit the ones already there, you will need to customize the pipeline itself. For that, the first step is to fork this repository.
 
-After that, you can add all the tasks you want on the `tasks` directory and create a new pipeline on the `pipelines` directory. We are using Tekton, so for more information on how to create tasks or pipelines, follow their [documentation](https://tekton.dev/docs/). 
+After that, you can add all the tasks you want on the `tasks` directory and create a new pipeline on the `pipelines` directory. We are using Tekton, so for more information on how to create tasks or pipelines, follow their [documentation](https://tekton.dev/docs/).
 
 To use the pipeline, you can follow the same steps in the [How to use](./README.md#how-to-use) heading. Just make sure to change the references to the pipeline inside the `.spec.resolverRef` to yours.
