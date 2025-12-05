@@ -45,7 +45,6 @@ spec:
         set -ex
 
         echo "Connecting to the ephemeral namespace cluster"
-        ls -l /tools/konflux/
         login.sh
 
         echo "Allocating ephemeral namespace"
