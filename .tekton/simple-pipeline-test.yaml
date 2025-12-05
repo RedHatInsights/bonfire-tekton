@@ -46,6 +46,8 @@ spec:
     value: ingress
   - name: IQE_MARKER_EXPRESSION
     value: smoke
+  - name: IQE_CJI_CLOWDAPP_NAME
+    value: ingress
   - name: DEPLOY_TIMEOUT
     value: "950"
   pipelineRef:
