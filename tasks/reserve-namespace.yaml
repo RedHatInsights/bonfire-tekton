@@ -45,6 +45,7 @@ spec:
         set -ex
 
         echo "Connecting to the ephemeral namespace cluster"
+        ls -lR konflux/
         login.sh
 
         echo "Allocating ephemeral namespace"
