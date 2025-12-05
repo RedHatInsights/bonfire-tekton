@@ -31,6 +31,7 @@ spec:
     - name: IQE_CJI_CLOWDAPP_NAME
       type: string
       description: name of the ClowdApp that you want to invoke an IQE test CJI for
+      default: ""
     - name: IQE_PLUGINS
       type: string
       description: name of the IQE plugin for this app.
