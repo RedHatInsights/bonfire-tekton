@@ -8,7 +8,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:25745c8
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:951431d
     - name: HOMEDIR
       type: string
       description: Value for the HOME environment variable.
