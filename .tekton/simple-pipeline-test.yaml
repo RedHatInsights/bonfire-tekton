@@ -27,7 +27,7 @@ spec:
         "components": [
             {
                 "name": "ingress",
-                "containerImage": "quay.io/redhat-services-prod/hcc-integrations-tenant/insights-ingress-go:9661ab6af096c03578af00c52a1326462771ff4b",
+                "containerImage": "quay.io/redhat-services-prod/hcc-integrations-tenant/insights-ingress-go:9661ab6af096c03578af00c52a1326462771ff4b@sha256:b6bdc5f356ba1fc6c58286274cef2b8639cb4434ec790abf99902f5088dcaefe",
                 "source": {
                     "git": {
                         "url": "https://github.com/RedHatInsights/insights-ingress-go",
