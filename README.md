@@ -48,15 +48,19 @@ spec:
     - name: COMPONENTS
       value: # Space-separated list of components to load.
     - name: COMPONENTS_W_RESOURCES
-      value: # List of components to keep.
+      value: # List of components to pass to bonfire's --no-remove-resources option
     - name: BONFIRE_COMPONENT_NAME
-      value: # Name of app-sre "resourceTemplate" in deploy.yaml for this component. If it is the same as the name in Konflux, you don't need to fill this
+      value: # (deprecated, use BONFIRE_COMPONENTS_MAPPING) Name of app-sre "resourceTemplate" in deploy.yaml for your component. If it is the same as the name in Konflux, you don't need to fill this.
+    - name: BONFIRE_COMPONENTS_MAPPING
+      value: # JSON key/value pairs mapping a konflux component name to its app-interface "resourceTemplate" name. If they both have the same name, you do not need to define this. Example: '{"konflux_component1": "app_interface_component1", "konflux_component2": "app_interface_component2"}'
     - name: COMPONENT_NAME
       value: # Name of your component name in Konflux
     - name: NAMESPACE_RESERVE_DURATION
       value: # (default 1h) Duration of the ephemeral namespace reservation
     - name: EXTRA_DEPLOY_ARGS
       value: # Extra arguments for the deployment
+    - name: IQE_CJI_CLOWDAPP_NAME
+      value: # Name of the ClowdApp that you want to invoke an IQE test CJI for. If it is the same as the name in Konflux, you don't need to fill this.
     - name: IQE_PLUGINS
       value: # Name of the IQE plugin for this app. NOTE: this should be "" if you have no IQE tests.
     - name: IQE_MARKER_EXPRESSION

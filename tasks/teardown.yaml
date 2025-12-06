@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:602c886
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:5bac161
     - name: NS
       type: string
       description: Namespace name to release
@@ -52,7 +52,7 @@ spec:
       script: |
         #!/bin/bash
         set -ex
-        
+
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
 
@@ -107,7 +107,7 @@ spec:
       script: |
         #!/bin/bash
         set -ex
-        
+
         echo "Connecting to the ephemeral namespace cluster"
         login.sh
 
