@@ -27,11 +27,11 @@ spec:
         "components": [
             {
                 "name": "ingress",
-                "containerImage": "quay.io/redhat-services-prod/hcc-integrations-tenant/insights-ingress-go:588f9ca32dbaf6ec6f52274b0d154555fb5fbc8b@sha256:5fa435277123e110533bc2ca98b4fe054de12166d830f2305de6b2d6a4f0150c",
+                "containerImage": "quay.io/redhat-services-prod/hcc-integrations-tenant/insights-ingress-go:9661ab6af096c03578af00c52a1326462771ff4b",
                 "source": {
                     "git": {
                         "url": "https://github.com/RedHatInsights/insights-ingress-go",
-                        "revision": "1800069465e9f2cfe11983f7168eec1f5e749043"
+                        "revision": "9661ab6af096c03578af00c52a1326462771ff4b"
                     }
                 }
             }
@@ -46,6 +46,8 @@ spec:
     value: ingress
   - name: IQE_MARKER_EXPRESSION
     value: smoke
+  - name: IQE_FILTER_EXPRESSION
+    value: "test_upload_post_success"
   - name: IQE_CJI_CLOWDAPP_NAME
     value: ingress
   - name: DEPLOY_TIMEOUT
@@ -59,4 +61,4 @@ spec:
         value: '{{revision}}'
       - name: pathInRepo
         value: pipelines/basic.yaml
-    
+
