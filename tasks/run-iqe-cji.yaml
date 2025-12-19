@@ -115,6 +115,8 @@ spec:
           value: $(params.BONFIRE_COMPONENT_NAME)
         - name: BONFIRE_COMPONENTS_MAPPING
           value: $(params.BONFIRE_COMPONENTS_MAPPING)
+        - name: IQE_CJI_CLOWDAPP_NAME
+          value: $(params.IQE_CJI_CLOWDAPP_NAME)
         - name: IQE_PLUGINS
           value: $(params.IQE_PLUGINS)
         - name: IQE_MARKER_EXPRESSION

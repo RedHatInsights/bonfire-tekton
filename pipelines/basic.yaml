@@ -66,12 +66,20 @@ spec:
       type: string
       default: ""
       description: name of the app-sre component name
+    - name: BONFIRE_COMPONENTS_MAPPING
+      type: string
+      default: ""
+      description: mapping of konflux component names to bonfire component names
     - name: COMPONENT_NAME
       type: string
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
     - name: IQE_PLUGINS
       type: string
       description: name of the IQE plugin for this app.
+    - name: IQE_CJI_CLOWDAPP_NAME
+      type: string
+      default: ""
+      description: name of the ClowdApp that you want to invoke an IQE test CJI for
     - name: IQE_MARKER_EXPRESSION
       type: string
       description: This is the value passed to pytest -m
@@ -218,6 +226,8 @@ spec:
           value: "$(params.APP_NAME)"
         - name: BONFIRE_COMPONENT_NAME
           value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: BONFIRE_COMPONENTS_MAPPING
+          value: "$(params.BONFIRE_COMPONENTS_MAPPING)"
         - name: COMPONENTS
           value: "$(params.COMPONENTS)"
         - name: COMPONENTS_W_RESOURCES
@@ -255,8 +265,12 @@ spec:
           value: "$(params.COMPONENT_NAME)"
         - name: BONFIRE_COMPONENT_NAME
           value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: BONFIRE_COMPONENTS_MAPPING
+          value: "$(params.BONFIRE_COMPONENTS_MAPPING)"
         - name: IQE_PLUGINS
           value: "$(params.IQE_PLUGINS)"
+        - name: IQE_CJI_CLOWDAPP_NAME
+          value: "$(params.IQE_CJI_CLOWDAPP_NAME)"
         - name: IQE_MARKER_EXPRESSION
           value: "$(params.IQE_MARKER_EXPRESSION)"
         - name: IQE_FILTER_EXPRESSION
