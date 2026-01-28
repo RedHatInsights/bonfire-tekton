@@ -123,6 +123,12 @@ spec:
             secretKeyRef:
               name: $(params.EPHEMERAL_ENV_PROVIDER_SECRET)
               key: url
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: token
+              optional: true
         - name: APP_NAME
           value: $(params.APP_NAME)
         - name: BONFIRE_COMPONENT_NAME
