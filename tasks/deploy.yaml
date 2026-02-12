@@ -146,6 +146,8 @@ spec:
           value: "$(params.DEPLOY_FRONTENDS)"
         - name: DEPLOY_TIMEOUT
           value: "$(params.DEPLOY_TIMEOUT)"
+        - name: OPTIONAL_DEPS_METHOD
+          value: "$(params.OPTIONAL_DEPS_METHOD)"
       script: |
         #!/bin/bash
         set -ex
