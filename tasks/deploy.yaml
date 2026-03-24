@@ -75,6 +75,10 @@ spec:
       type: string
       description: "Method to install optional dependencies - see bonfire docs"
       default: "hybrid"
+    - name: REF_ENV
+      type: string
+      description: "Reference environment for dependencies (insights-stage or insights-production)"
+      default: "insights-production"
   steps:
     # A hack to reduce the snapshot to a single component
     # Copied from https://github.com/enterprise-contract/ec-cli/blob/27a1c5725e864756c582e716c839ae53751aff0f/tasks/verify-conforma-konflux-ta/0.1/verify-conforma-konflux-ta.yaml#L205
@@ -146,6 +150,8 @@ spec:
           value: "$(params.DEPLOY_FRONTENDS)"
         - name: DEPLOY_TIMEOUT
           value: "$(params.DEPLOY_TIMEOUT)"
+        - name: REF_ENV
+          value: "$(params.REF_ENV)"
       script: |
         #!/bin/bash
         set -ex

@@ -160,6 +160,10 @@ spec:
       type: string
       description: "Tag of the iqe image to run tests from"
       default: ""
+    - name: REF_ENV
+      type: string
+      description: "Reference environment for dependencies (insights-stage or insights-production)"
+      default: "insights-production"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -240,6 +244,8 @@ spec:
           value: "$(params.DEPLOY_TIMEOUT)"
         - name: OPTIONAL_DEPS_METHOD
           value: "$(params.DEPLOY_OPTIONAL_DEPS_METHOD)"
+        - name: REF_ENV
+          value: "$(params.REF_ENV)"
       runAfter:
         - reserve-namespace
       taskRef:
