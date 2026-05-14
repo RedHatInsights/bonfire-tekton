@@ -4,6 +4,7 @@ This repository has a Tekton pipeline, and its tasks, made based on the way the 
 
 For more information about how tests are currently handled, see this [repo](https://github.com/RedHatInsights/cicd-tools).
 
+
 ## How to use
 
 ### Prerequisites
@@ -79,6 +80,8 @@ spec:
       value: # "something" -- value to set for ENV_FOR_DYNACONF. Default is "clowder_smoke"
     - name: IQE_SELENIUM
       value: # Whether to run IQE pod with a selenium container. Default is "false"
+    - name: IQE_PLAYWRIGHT
+      value: # Whether to run IQE pod with a playwright container. Default is "false"
     - name: IQE_PARALLEL_ENABLED
       value: # Whether to run IQE in parallel mode. Default is "false"
     - name: IQE_PARALLEL_WORKER_COUNT
