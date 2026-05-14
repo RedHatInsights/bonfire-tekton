@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a128bcd
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:4a25c43
     - name: EPHEMERAL_ENV_PROVIDER_SECRET
       type: string
       default: ephemeral-env-provider
@@ -22,7 +22,15 @@ spec:
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
     - name: BONFIRE_COMPONENT_NAME
       type: string
-      description: name of the app-sre component name
+      description: name of the app-sre component name (deprecated, use BONFIRE_COMPONENTS_MAPPING)
+      default: ""
+    - name: BONFIRE_COMPONENTS_MAPPING
+      type: string
+      description: mapping of konflux component names to bonfire component names
+      default: ""
+    - name: IQE_CJI_CLOWDAPP_NAME
+      type: string
+      description: name of the ClowdApp that you want to invoke an IQE test CJI for
       default: ""
     - name: IQE_PLUGINS
       type: string
@@ -75,10 +83,14 @@ spec:
       type: string
       description: "Arguments to send to reportportal"
       default: ""
-    - name: IQE_IBUTSU_SOURCE
+    - name: IBUTSU_SOURCE
       type: string
       description: "Update the ibutsu source for the current run"
       default: ""
+    - name: IBUTSU_MODE
+      type: string
+      description: "Update the ibutsu mode for the current run"
+      default: "archive"
     - name: IQE_IMAGE_TAG
       type: string
       description: "Tag of the IQE image to be used"
@@ -101,6 +113,10 @@ spec:
           value: $(params.COMPONENT_NAME)
         - name: BONFIRE_COMPONENT_NAME
           value: $(params.BONFIRE_COMPONENT_NAME)
+        - name: BONFIRE_COMPONENTS_MAPPING
+          value: $(params.BONFIRE_COMPONENTS_MAPPING)
+        - name: IQE_CJI_CLOWDAPP_NAME
+          value: $(params.IQE_CJI_CLOWDAPP_NAME)
         - name: IQE_PLUGINS
           value: $(params.IQE_PLUGINS)
         - name: IQE_MARKER_EXPRESSION
@@ -127,8 +143,10 @@ spec:
           value: $(params.IQE_PARALLEL_WORKER_COUNT)
         - name: IQE_RP_ARGS
           value: $(params.IQE_RP_ARGS)
-        - name: IQE_IBUTSU_SOURCE
-          value: $(params.IQE_IBUTSU_SOURCE)
+        - name: IBUTSU_SOURCE
+          value: $(params.IBUTSU_SOURCE)
+        - name: IBUTSU_MODE
+          value: $(params.IBUTSU_MODE)
         - name: BONFIRE_BOT
           value: "true"
         - name: IQE_IMAGE_TAG

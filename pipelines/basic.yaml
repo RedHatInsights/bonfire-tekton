@@ -17,7 +17,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a128bcd
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:4a25c43
     - name: SNAPSHOT
       type: string
       description: |
@@ -66,12 +66,20 @@ spec:
       type: string
       default: ""
       description: name of the app-sre component name
+    - name: BONFIRE_COMPONENTS_MAPPING
+      type: string
+      default: ""
+      description: mapping of konflux component names to bonfire component names
     - name: COMPONENT_NAME
       type: string
       description: name of app-sre "resourceTemplate" in deploy.yaml for this component
     - name: IQE_PLUGINS
       type: string
       description: name of the IQE plugin for this app.
+    - name: IQE_CJI_CLOWDAPP_NAME
+      type: string
+      default: ""
+      description: name of the ClowdApp that you want to invoke an IQE test CJI for
     - name: IQE_MARKER_EXPRESSION
       type: string
       description: This is the value passed to pytest -m
@@ -120,10 +128,18 @@ spec:
       type: string
       description: "Arguments to send to reportportal"
       default: ""
-    - name: IQE_IBUTSU_SOURCE
+    - name: IBUTSU_SOURCE
       type: string
       description: "Update the ibutsu source for the current run"
       default: ""
+    - name: IBUTSU_MODE
+      type: string
+      description: "Update the ibutsu mode for the current run"
+      default: "archive"
+    - name: NAMESPACE_RESERVE_DURATION
+      type: string
+      description: "Duration to reserve the namespace for (e.g. 60m, 2h)"
+      default: "1h"
     - name: EXTRA_DEPLOY_ARGS
       type: string
       description: "Extra arguments for the deployment"
@@ -144,6 +160,10 @@ spec:
       type: string
       description: "Tag of the iqe image to run tests from"
       default: ""
+    - name: REF_ENV
+      type: string
+      description: "Reference environment for dependencies (insights-stage or insights-production)"
+      default: "insights-production"
   results:
     - name: ARTIFACTS_URL
       description: URL for the test's artifacts
@@ -179,6 +199,8 @@ spec:
           value: "$(params.EPHEMERAL_ENV_PROVIDER_SECRET)"
         - name: BONFIRE_IMAGE
           value: "$(params.BONFIRE_IMAGE)"
+        - name: RESERVE_DURATION
+          value: "$(params.NAMESPACE_RESERVE_DURATION)"
       taskRef:
         resolver: git
         params:
@@ -208,6 +230,8 @@ spec:
           value: "$(params.APP_NAME)"
         - name: BONFIRE_COMPONENT_NAME
           value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: BONFIRE_COMPONENTS_MAPPING
+          value: "$(params.BONFIRE_COMPONENTS_MAPPING)"
         - name: COMPONENTS
           value: "$(params.COMPONENTS)"
         - name: COMPONENTS_W_RESOURCES
@@ -220,6 +244,8 @@ spec:
           value: "$(params.DEPLOY_TIMEOUT)"
         - name: OPTIONAL_DEPS_METHOD
           value: "$(params.DEPLOY_OPTIONAL_DEPS_METHOD)"
+        - name: REF_ENV
+          value: "$(params.REF_ENV)"
       runAfter:
         - reserve-namespace
       taskRef:
@@ -245,8 +271,12 @@ spec:
           value: "$(params.COMPONENT_NAME)"
         - name: BONFIRE_COMPONENT_NAME
           value: "$(params.BONFIRE_COMPONENT_NAME)"
+        - name: BONFIRE_COMPONENTS_MAPPING
+          value: "$(params.BONFIRE_COMPONENTS_MAPPING)"
         - name: IQE_PLUGINS
           value: "$(params.IQE_PLUGINS)"
+        - name: IQE_CJI_CLOWDAPP_NAME
+          value: "$(params.IQE_CJI_CLOWDAPP_NAME)"
         - name: IQE_MARKER_EXPRESSION
           value: "$(params.IQE_MARKER_EXPRESSION)"
         - name: IQE_FILTER_EXPRESSION
@@ -271,8 +301,10 @@ spec:
           value: "$(params.IQE_PARALLEL_WORKER_COUNT)"
         - name: IQE_RP_ARGS
           value: "$(params.IQE_RP_ARGS)"
-        - name: IQE_IBUTSU_SOURCE
-          value: "$(params.IQE_IBUTSU_SOURCE)"
+        - name: IBUTSU_SOURCE
+          value: "$(params.IBUTSU_SOURCE)"
+        - name: IBUTSU_MODE
+          value: "$(params.IBUTSU_MODE)"
         - name: IQE_IMAGE_TAG
           value: "$(params.IQE_IMAGE_TAG)"
       runAfter:

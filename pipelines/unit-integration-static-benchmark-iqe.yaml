@@ -17,7 +17,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:a6eadea
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:4a25c43
     - name: SNAPSHOT
       type: string
       description: |
@@ -121,10 +121,14 @@ spec:
       type: string
       description: "Arguments to send to reportportal"
       default: ""
-    - name: IQE_IBUTSU_SOURCE
+    - name: IBUTSU_SOURCE
       type: string
       description: "Update the ibutsu source for the current run"
       default: ""
+    - name: IBUTSU_MODE
+      type: string
+      description: "Update the ibutsu mode for the current run"
+      default: "archive"
     - name: EXTRA_DEPLOY_ARGS
       type: string
       description: "Extra arguments for the deployment"
@@ -276,8 +280,10 @@ spec:
           value: "$(params.IQE_PARALLEL_WORKER_COUNT)"
         - name: IQE_RP_ARGS
           value: "$(params.IQE_RP_ARGS)"
-        - name: IQE_IBUTSU_SOURCE
-          value: "$(params.IQE_IBUTSU_SOURCE)"
+        - name: IBUTSU_SOURCE
+          value: "$(params.IBUTSU_SOURCE)"
+        - name: IBUTSU_MODE
+          value: "$(params.IBUTSU_MODE)"
         - name: IQE_IMAGE_TAG
           value: "$(params.IQE_IMAGE_TAG)"
         - name: PIPELINE_RUN_NAME
@@ -290,7 +296,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main" 
+            value: "main"
           - name: pathInRepo
             value: .tekton/iqe-tests.yaml
     - name: unit-tests
@@ -315,7 +321,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main" 
+            value: "main"
           - name: pathInRepo
             value: .tekton/unit-tests.yaml
     - name: integration-tests
@@ -340,7 +346,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main" 
+            value: "main"
           - name: pathInRepo
             value: .tekton/integretion-tests.yaml
     - name: benchmark-tests
