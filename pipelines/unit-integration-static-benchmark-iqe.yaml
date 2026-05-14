@@ -109,6 +109,10 @@ spec:
       type: string
       description: "true -- whether to run IQE pod with a selenium container, default is false"
       default: "false"
+    - name: IQE_PLAYWRIGHT
+      type: string
+      description: "true -- whether to run IQE pod with a playwright container, default is false"
+      default: "false"
     - name: IQE_PARALLEL_ENABLED
       type: string
       description: "whether to run IQE with --parallel-enabled"
@@ -274,6 +278,8 @@ spec:
           value: "$(params.IQE_ENV_VARS)"
         - name: IQE_SELENIUM
           value: "$(params.IQE_SELENIUM)"
+        - name: IQE_PLAYWRIGHT
+          value: "$(params.IQE_PLAYWRIGHT)"
         - name: IQE_PARALLEL_ENABLED
           value: "$(params.IQE_PARALLEL_ENABLED)"
         - name: IQE_PARALLEL_WORKER_COUNT
