@@ -4,15 +4,32 @@ This repository has a Tekton pipeline, and its tasks, made based on the way the 
 
 For more information about how tests are currently handled, see this [repo](https://github.com/RedHatInsights/cicd-tools).
 
+## Repository Structure
+
+```
+bonfire-tekton/
+├── pipelines/
+│   ├── basic.yaml          # Pipeline with IQE tests
+│   └── basic_no_iqe.yaml   # Pipeline without IQE tests
+├── tasks/
+│   ├── reserve-namespace   # Reserves an ephemeral namespace
+│   ├── deploy              # Deploys the component via Bonfire
+│   ├── run-iqe-cji         # Runs IQE tests via a CJI
+│   └── teardown            # Cleans up the ephemeral namespace
+├── .tekton/                # Pipelines-as-Code PipelineRun definitions for self-testing
+└── update-image.sh         # Utility script to bulk-update the BONFIRE_IMAGE tag
+```
+
+All pipeline tasks use the runtime image `quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools`.
 
 ## How to use
 
 ### Prerequisites
 
-* Access to Konflux. Join the wailist [here](https://console.redhat.com/preview/hac/application-pipeline) and ask for access in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) slack channel.
+* Access to Konflux. Join the waitlist [here](https://console.redhat.com/preview/hac/application-pipeline) and ask for access in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) slack channel.
 * Application in Konflux already created. You can follow the instructions in the Konflux [docs](https://redhat-appstudio.github.io/docs.appstudio.io/Documentation/main/getting-started/get-started/#creating-your-first-application). Access Konflux [here](https://console.redhat.com/preview/hac/application-pipeline).
 > **IMPORTANT:** The name of the Konflux Component must be the same name of the `COMPONENT_NAME` parameter in the Integration Test Scenario below.
-* Kustomize installed in your computer. Follow the instalations [intructions](https://kubectl.docs.kubernetes.io/installation/kustomize/).
+* Kustomize installed in your computer. Follow the installation [instructions](https://kubectl.docs.kubernetes.io/installation/kustomize/).
 
 ### Add the Integration Test Scenario to your application
 
@@ -99,7 +116,7 @@ spec:
     - name: IQE_IMAGE_TAG
       value: # The IQE image used to run tests. Default is "".
 ```
-> **NOTE:** You can fork the pipeline from https://github.com/RedHatInsigths/bonfire-tekton in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
+> **NOTE:** You can fork the pipeline from https://github.com/RedHatInsights/bonfire-tekton in order to customize it. In case you do it, you will need to change the `url` field in the `IntegrationTestScenario`.
 4. Add the following `kustomization.yaml` file in the same directory:
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -109,7 +126,7 @@ resources:
   - ../../../../lib/consoledot-test-pipeline
 namespace: <your-workspace-name>-tenant
 ```
-5. Run the `build-manifests.sh`. This is script is using [Kustomize](https://kustomize.io/) to generate the Integration Test Scenario and secrets you will need to run the pipeline in the cluster. Check that the `auto-generated` directory is updated with these files.
+5. Run the `build-manifests.sh`. This script uses [Kustomize](https://kustomize.io/) to generate the Integration Test Scenario and secrets you will need to run the pipeline in the cluster. Check that the `auto-generated` directory is updated with these files.
 6. Commit your directory and the `auto-generated` directory.
 7. Create a PR from your fork, and ask for approval in the [#konflux-users](https://redhat-internal.slack.com/archives/C04PZ7H0VA8) Slack channel.
 
@@ -126,3 +143,25 @@ If you need to add new tasks in between the ones already in the pipeline, remove
 After that, you can add all the tasks you want on the `tasks` directory and create a new pipeline on the `pipelines` directory. We are using Tekton, so for more information on how to create tasks or pipelines, follow their [documentation](https://tekton.dev/docs/).
 
 To use the pipeline, you can follow the same steps in the [How to use](./README.md#how-to-use) heading. Just make sure to change the references to the pipeline inside the `.spec.resolverRef` to yours.
+
+## Development
+
+### Testing changes
+
+There is no local test runner. All tests run in-cluster via Tekton.
+
+Changes to `.tekton/`, `pipelines/`, or `tasks/` automatically trigger the self-test PipelineRuns defined in `.tekton/` via [Pipelines-as-Code](https://pipelinesascode.com/) when you open a pull request against `main`. Review the PipelineRun results in the Konflux or OpenShift UI to validate your changes.
+
+### Updating the BONFIRE_IMAGE tag
+
+To update the `BONFIRE_IMAGE` tag across all YAML files in the repository, run the following from the repo root:
+
+```bash
+./update-image.sh <new-tag>
+```
+
+This script performs a bulk find-and-replace of the image tag in every relevant YAML file, ensuring all tasks and pipelines reference the same image version.
+
+## License
+
+No license file is currently present in this repository. Please consult the repository maintainers for licensing information.
