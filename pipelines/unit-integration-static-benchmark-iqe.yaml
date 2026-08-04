@@ -180,6 +180,23 @@ spec:
           - name: pathInRepo
             value: tasks/teardown.yaml
   tasks:
+    - name: extract-project-revision
+      params:
+        - name: BONFIRE_IMAGE
+          value: "$(params.BONFIRE_IMAGE)"
+        - name: SNAPSHOT
+          value: "$(params.SNAPSHOT)"
+        - name: PROJECT_URL
+          value: "$(params.PROJECT_URL)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: "$(params.URL)"
+          - name: revision
+            value: "$(params.REVISION)"
+          - name: pathInRepo
+            value: tasks/extract-project-revision.yaml
     - name: reserve-namespace
       params:
         - name: NS_REQUESTER
@@ -296,7 +313,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main"
+            value: "$(tasks.extract-project-revision.results.REVISION)"
           - name: pathInRepo
             value: .tekton/iqe-tests.yaml
     - name: unit-tests
@@ -321,7 +338,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main"
+            value: "$(tasks.extract-project-revision.results.REVISION)"
           - name: pathInRepo
             value: .tekton/unit-tests.yaml
     - name: integration-tests
@@ -346,7 +363,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main"
+            value: "$(tasks.extract-project-revision.results.REVISION)"
           - name: pathInRepo
             value: .tekton/integretion-tests.yaml
     - name: benchmark-tests
@@ -371,7 +388,7 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main"
+            value: "$(tasks.extract-project-revision.results.REVISION)"
           - name: pathInRepo
             value: .tekton/benchmark-tests.yaml
     - name: static-tests
@@ -396,6 +413,6 @@ spec:
           - name: url
             value: "$(params.PROJECT_URL)"
           - name: revision
-            value: "main"
+            value: "$(tasks.extract-project-revision.results.REVISION)"
           - name: pathInRepo
             value: .tekton/static-tests.yaml

@@ -1,0 +1,41 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: extract-project-revision
+spec:
+  params:
+    - name: BONFIRE_IMAGE
+      type: string
+      description: The container Bonfire image to use for the tekton tasks
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:4a25c43
+    - name: SNAPSHOT
+      type: string
+      description: ApplicationSnapshot JSON containing component details
+    - name: PROJECT_URL
+      type: string
+      description: Git URL of the project to match in SNAPSHOT
+  results:
+    - name: REVISION
+      description: Resolved git revision for project tasks
+  steps:
+    - name: extract
+      image: "$(params.BONFIRE_IMAGE)"
+      env:
+        - name: SNAPSHOT
+          value: $(params.SNAPSHOT)
+        - name: PROJECT_URL
+          value: $(params.PROJECT_URL)
+      script: |
+        #!/bin/bash
+        REVISION=$(python3 -c "
+        import json, sys
+        snap = json.loads('''$SNAPSHOT''')
+        for c in snap.get('components', []):
+          url = c.get('source', {}).get('git', {}).get('url', '')
+          if url == '$PROJECT_URL':
+            print(c['source']['git']['revision'])
+            sys.exit(0)
+        print('main')
+        " 2>/dev/null)
+
+        printf '%s' "${REVISION:-main}" > $(results.REVISION.path)
