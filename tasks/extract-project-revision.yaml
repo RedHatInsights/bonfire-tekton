@@ -7,7 +7,7 @@ spec:
     - name: BONFIRE_IMAGE
       type: string
       description: The container Bonfire image to use for the tekton tasks
-      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:4a25c43
+      default: quay.io/redhat-services-prod/hcm-eng-prod-tenant/cicd-tools:410ab11
     - name: SNAPSHOT
       type: string
       description: ApplicationSnapshot JSON containing component details
