@@ -27,11 +27,11 @@ spec:
         "components": [
             {
                 "name": "ingress",
-                "containerImage": "quay.io/redhat-services-prod/hcc-integrations-tenant/insights-ingress-go:9661ab6af096c03578af00c52a1326462771ff4b@sha256:b6bdc5f356ba1fc6c58286274cef2b8639cb4434ec790abf99902f5088dcaefe",
+                "containerImage": "quay.io/redhat-services-prod/hcc-integrations-tenant/insights-ingress-go:62e640335636950bc3b20abd5ac2f92b8e0c1dfe@sha256:12ec98e67d4391d42136f04308083bc23348b223f9843883fbb052c12c9242ad",
                 "source": {
                     "git": {
                         "url": "https://github.com/RedHatInsights/insights-ingress-go",
-                        "revision": "9661ab6af096c03578af00c52a1326462771ff4b"
+                        "revision": "62e640335636950bc3b20abd5ac2f92b8e0c1dfe"
                     }
                 }
             }
